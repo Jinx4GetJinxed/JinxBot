@@ -1,7 +1,8 @@
 require('dotenv').config();
 
-const { Client, Intents, Emoji, MessageEmbed } = require('discord.js');
+const { Client, Intents, Emoji, MessageEmbed, MessageAttachment } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const image1 = new MessageAttachment('./chaumiere.gif','chaumiere.gif');
 const PREFIX = "Jinx "
 
 client.on('ready', () => {
@@ -68,7 +69,7 @@ client.on('messageCreate',async (message) => {
                 .setAuthor("Le bot a été créé par Hakim Id Brahim",message.author.displayAvatarURL(),'https://www.instagram.com/hakim_id_brahim/?hl=fr')
                 .setURL()
                 .setDescription('\u200B\nVoici les règles à respecter sur 🎮 𝙻𝙰 𝙲𝙷𝙰𝚄𝙼𝙸𝙴𝚁𝙴 👽 :')
-                .setThumbnail()
+                .setThumbnail('https://tenor.com/view/jinx-look-bite-gif-4676599')
                 .addFields(
                     { name: '\u200B\n\u200B\n𝙱𝚘𝚗𝚗𝚎 𝚎𝚗𝚝𝚎𝚗𝚝𝚎 :\u200B\n', 
                     value: "\u200B\n```diff\n- ⚠️ Écrire dans les salons appropriés ⚠️.\n\n- ⚠️ Interdiction de spam ⚠️.\n\n- ⚠️ Les conflits entre les membres seront vite terminés par des mutes ⚠️.\n\n- ⚠️ Tout harcèlement par message privé reporté par un membre est aussitôt sanctionné par un ban ⚠️.```"},
@@ -85,14 +86,20 @@ client.on('messageCreate',async (message) => {
                             \u200B\n ░░▒▓█◦•◦>  Niveau 10 : <@&831798220823724033> 
                             \u200B\n ░░▒▓█◦•◦>  Niveau 15 : <@&840765286403407884>
                             \u200B\n ░░▒▓█◦•◦>  Niveau 20 : <@&831798672211574865> 
-                            \u200B\n **░░▒▓█◦•◦> Et une fois que le niveau 30 est atteint tu es direct promu @𝙺𝙴𝚃𝙰𝙼𝙸𝙽𝙰𝚃𝙾𝚁.  !**`, inline:true},
+                            \u200B\n **░░▒▓█◦•◦> Et une fois que le niveau 30 est atteint tu es direct promu <@&831803492028645386>  !**`},
 
-                    { name: 'Inline field title', value: 'Some value here'},
+                    { name: '\u200B\n\u200B\n𝚅𝚘𝚒𝚌𝚒 𝚚𝚞𝚎𝚕𝚚𝚞𝚎𝚜 𝚌𝚘𝚗𝚜𝚎𝚒𝚕𝚜 :\u200B\n', 
+                    value: `\u200B\n - Pour voir la progression de ton level c'est soit ***/lvl*** (pour voir son propre niveau) ou soit ***/classement*** (pour voir le niveau de tout le monde).
+                            \u200B\n - Pour obtenir une listes des commandes sur le serveur écrivez ***Jinx help*** dans le tchat.
+                            \u200B\n - De plus si tu nous communiques ton anniversaire par message tu pourras recevoir le rôle <@&814456055986782208> et tu seras tout en haut de la liste des membres ce jour-là.`},
+                    { name:`\u200B\n ***Plus on est fou, plus on rit !!!***`,
+                    value: `\u200B\n ***- Sois un maximum actif <a:GetNaeNae:751206487631593552> et n'hésite pas à inviter tous tes potes !***
+                            \u200B\n ***- N'oublie pas de passer par la case <#534095413662449675> pour que l'on se connaisse un petit peu mieux.***
+                            \u200B\n ***- Le but de ce serveur est que tout le monde s'y sente bien. Alors, en cas de problème, contacte moi.***
+                            \u200B\n  <a:Dancing:784970376831696897> **Bon amusement l'élite !!! **<a:PartyCat:751206416760569876>`},
                 )
-                .addField('Inline field title', 'Some value here', true)
-                .setImage()
-                .setTimestamp()
-                .setFooter('Some footer text here');
+                .setImage('https://wifflegif.com/gifs/556009-leauge-of-legends-get-jinxed-gif')
+                .setFooter('Tous droits réservés, Jinx Bot©2021 - Id Brahim Hakim • Envoyé le 30 août 2077');
                 
             message.channel.send({ embeds: [Consignes1] });
         }
