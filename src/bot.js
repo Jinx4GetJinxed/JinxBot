@@ -71,13 +71,21 @@ client.on('messageCreate',async (message) => {
                 .setThumbnail()
                 .addFields(
                     { name: '\u200B\n\u200B\n𝙱𝚘𝚗𝚗𝚎 𝚎𝚗𝚝𝚎𝚗𝚝𝚎 :\u200B\n', 
-                    value: "\u200B```diff\n- ⚠️ Écrire dans les salons appropriés ⚠️.\n\n- ⚠️ Interdiction de spam ⚠️.\n\n- ⚠️ Les conflits entre les membres seront vite terminés par des mutes ⚠️.\n\n- ⚠️ Tout harcèlement par message privé reporté par un membre est aussitôt sanctionné par un ban ⚠️.```"},
+                    value: "\u200B\n```diff\n- ⚠️ Écrire dans les salons appropriés ⚠️.\n\n- ⚠️ Interdiction de spam ⚠️.\n\n- ⚠️ Les conflits entre les membres seront vite terminés par des mutes ⚠️.\n\n- ⚠️ Tout harcèlement par message privé reporté par un membre est aussitôt sanctionné par un ban ⚠️.```"},
                     
                     { name: '\u200B\n\u200B\n𝙻𝚎𝚜 𝚛𝚘𝚕𝚎𝚜 𝚙𝚊𝚛 𝚗𝚒𝚟𝚎𝚊𝚞𝚡 :\u200B\n', 
-                    value: '\u200BComment avoir des rôles?\u200B\n- En étant tout simplement actif sur le serveur (écrire des messages dans les salons, partager du contenu, venir en vocal.' },
+                    value: `\u200B\nComment avoir des rôles?
+                            \u200B\n- En étant tout simplement actif sur le serveur (écrire des messages dans les salons, partager du contenu, venir en vocal.` },
 
                     { name: '\u200B\n\u200B\n𝚅𝚘𝚒𝚌𝚒 𝚞𝚗𝚎 𝚕𝚒𝚜𝚝𝚎 𝚍𝚎𝚜 𝚛𝚘𝚕𝚎𝚜 :\u200B\n', 
-                    value: '\u200B ░░▒▓█◦•◦> lol', inline:true},
+                    value: `\u200B\n ░░▒▓█◦•◦>  Niveau de départ: <@&831797926007144478>
+                            \u200B\n ░░▒▓█◦•◦>  Niveau 1 : <@&831798215916519434>
+                            \u200B\n ░░▒▓█◦•◦>  Niveau 2 : <@&831798217322397716>
+                            \u200B\n ░░▒▓█◦•◦>  Niveau 5 : <@&831798219230281728> 
+                            \u200B\n ░░▒▓█◦•◦>  Niveau 10 : <@&831798220823724033> 
+                            \u200B\n ░░▒▓█◦•◦>  Niveau 15 : <@&840765286403407884>
+                            \u200B\n ░░▒▓█◦•◦>  Niveau 20 : <@&831798672211574865> 
+                            \u200B\n **░░▒▓█◦•◦> Et une fois que le niveau 30 est atteint tu es direct promu @𝙺𝙴𝚃𝙰𝙼𝙸𝙽𝙰𝚃𝙾𝚁.  !**`, inline:true},
 
                     { name: 'Inline field title', value: 'Some value here'},
                 )
