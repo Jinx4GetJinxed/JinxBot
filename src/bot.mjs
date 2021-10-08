@@ -1,8 +1,7 @@
-require('dotenv').config();
+import {} from 'dotenv/config';
 
-import { Client, Intents, MessageEmbed, MessageAttachment } from 'discord.js';
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
-const attachement = new MessageAttachment('./chaumiere.gif', 'chaumiere.gif');
+import { Client, Intents, MessageEmbed } from 'discord.js';
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] }, { partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 const PREFIX = "Jinx "
 
 client.on('ready', () => {
@@ -60,15 +59,13 @@ client.on('messageCreate', async (message) => {
         }
 
         if (CMD_NAME === 'consignes') {
-            const flyEmoji = client.emojis.cache.get('714097004367839282')
             const Consignes1 = new MessageEmbed()
                 .setColor('#33e9ff')
                 .setTitle('<a:QuestionMarkGuy:751206439812464722> 𝙻𝙴𝚂 𝚁𝙴𝙶𝙻𝙴𝚂 𝙳𝙴 𝙻𝙰 𝙲𝙷𝙰𝚄𝙼𝙸𝙴𝚁𝙴 <a:QuestionMarkGuy:751206439812464722>')
-                .setAuthor("Le bot a été créé par Hakim Id Brahim", message.author.displayAvatarURL(), 'https://www.instagram.com/hakim_id_brahim/?hl=fr')
+                .setAuthor("Ce bot a été créé par Hakim Id Brahim", message.author.displayAvatarURL(), 'https://www.instagram.com/hakim_id_brahim/?hl=fr')
                 .setURL()
-                .attachement(attachement)
                 .setDescription('\u200B\nVoici les règles à respecter sur 🎮 𝙻𝙰 𝙲𝙷𝙰𝚄𝙼𝙸𝙴𝚁𝙴 👽 :')
-                .setThumbnail(message.guild.iconURL())
+                .setThumbnail(message.guild.iconURL({size:1024,dynamic:true}))
                 .addFields(
                     {
                         name: '\u200B\n\u200B\n𝙱𝚘𝚗𝚗𝚎 𝚎𝚗𝚝𝚎𝚗𝚝𝚎 :\u200B\n',
@@ -103,10 +100,31 @@ client.on('messageCreate', async (message) => {
                             \u200B\n ***- Le but de ce serveur est que tout le monde s'y sente bien. Alors, en cas de problème, contacte moi.***
                             \u200B\n  <a:Dancing:784970376831696897> **Bon amusement l'élite !!! **<a:PartyCat:751206416760569876>`},
                 )
-                .setImage()
                 .setFooter('Tous droits réservés, Jinx Bot©2021 - Id Brahim Hakim • Envoyé le 30 août 2077');
 
             message.channel.send({ embeds: [Consignes1] });
+
+            const Consignes2 = new MessageEmbed()
+                    .setColor("#036ffc")
+                    .setDescription("**𝖠𝗃𝗈𝗎𝗍𝖾𝗓 𝗏𝗈𝗌 𝗃𝖾𝗎𝗑 𝗆𝗎𝗅𝗍𝗂𝗃𝗈𝗎𝖾𝗎𝗋𝗌 𝖿𝖺𝗏𝗈𝗋𝗂𝗌 𝖾𝗇 𝖼𝗅𝗂𝗊𝗎𝖺𝗇𝗍 𝗌𝗎𝗋 𝗅𝖾𝗌 𝖾𝗆𝗈𝗃𝗂𝗌 𝖼𝗂-𝖽𝖾𝗌𝗌𝗈𝗎𝗌.** \n ↓      ↓      ↓      ↓      ↓      ↓      ↓      ↓      ↓     ↓")
+            
+            message.channel.send({ embeds: [Consignes2] }).then(M => {
+                M.react("<a:GTA:754311739620720783>")
+                M.react("<a:RB6:754313462443671653>")
+                M.react("<a:Valorant:754783846066552955>")
+                M.react("<a:TrackMania:754790048020562080>")
+                M.react("<a:RocketLeague:763117629547479100>")
+                M.react("<a:Overwatch:767696668354543638>")
+                M.react("<a:osu:817701721891536976>")
+                M.react("<a:HearthStone:818455019069505566>")
+                M.react("<a:Roblox:818460291305570304>")
+                M.react("<a:Paladins:818479734651486218>")
+                M.react("<a:Forza:818488189370761277>")
+                M.react("<a:Minecraft:831671708665643048>")
+                M.react("<a:LoL:836830253103710278>")
+                M.react("<a:CoD:836837582910390272>")
+                M.react("<a:WoW:851133762791276555>")
+            });
         }
     }
 
@@ -120,7 +138,30 @@ client.on('messageCreate', async (message) => {
 });
 
 
+client.on('messageReactionAdd', async (reaction, user) => {
+    if (reaction.partial) {
+        try {
+            await reaction.fetch();
+        } catch (error) {
+            console.error('Le traitement du message à échoué: ', error);
+            return;
+        }
+    }
+    if(message.channel.type == "text" && message.channel.name.toLowerCase() == "🔔ｃｏｎｓｉｇｎｅｓ📃"){
+        if (!user.bot) {
+            if (reaction.emoji.id == '754311739620720783') { 
 
+                const role = reaction.message.guild.roles.cache.find(r => r.id === '754290393457229886'); 
 
+                const { guild } = reaction.message 
+
+                const member = guild.members.cache.find(member => member.id === user.id); 
+
+                member.roles.add(role); 
+
+            }
+        }
+    }
+});
 
 client.login(process.env.DISCORDJS_BOT_TOKEN);
