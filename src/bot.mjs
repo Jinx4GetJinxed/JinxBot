@@ -147,9 +147,8 @@ client.on('messageReactionAdd', async (reaction, user) => {
             return;
         }
     }
-    if(message.channel.type == "text" && message.channel.name.toLowerCase() == "🔔ｃｏｎｓｉｇｎｅｓ📃"){
         if (!user.bot) {
-            if (reaction.emoji.id == '754311739620720783') { 
+            if (reaction.emoji.name == 'GTA') { 
 
                 const role = reaction.message.guild.roles.cache.find(r => r.id === '754290393457229886'); 
 
@@ -159,9 +158,11 @@ client.on('messageReactionAdd', async (reaction, user) => {
 
                 member.roles.add(role); 
 
+                console.log("c'est bon")
+
             }
         }
-    }
+
 });
 
 client.login(process.env.DISCORDJS_BOT_TOKEN);
