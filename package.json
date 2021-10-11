@@ -15,6 +15,10 @@
   "dependencies": {
     "discord.js": "^13.2.0",
     "dotenv": "^10.0.0",
+    "emoji-unicode": "^2.0.1",
     "nodemon": "^2.0.13"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0"
   }
 }

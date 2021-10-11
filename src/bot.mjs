@@ -44,7 +44,34 @@ client.on('messageCreate', async (message) => {
 
 
 client.on('messageReactionAdd', async (reaction, user) => {
+<<<<<<< HEAD
 
+=======
+    if (reaction.partial) {
+        try {
+            await reaction.fetch();
+        } catch (error) {
+            console.error('Le traitement du message à échoué: ', error);
+            return;
+        }
+    }
+        if (!user.bot) {
+            if (reaction.emoji.name == 'GTA') { 
+
+                const role = reaction.message.guild.roles.cache.find(r => r.id === '754290393457229886'); 
+
+                const { guild } = reaction.message 
+
+                const member = guild.members.cache.find(member => member.id === user.id); 
+
+                member.roles.add(role); 
+
+                console.log("c'est bon")
+
+            }
+        }
+
+>>>>>>> 8a4b5c53753b879c46cf51f82da667210dd30d3f
 });
 
 client.login(process.env.DISCORDJS_BOT_TOKEN);
