@@ -5,9 +5,6 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
 const attachement = new MessageAttachment('./chaumiere.gif', 'chaumiere.gif');
 const PREFIX = "Jinx "
 
-client.on('ready', () => {
-    console.log(`le bot ${client.user.tag} est connecté`)
-});
 
 process.traceDeprecation = true;
 
@@ -60,7 +57,6 @@ client.on('messageCreate', async (message) => {
         }
 
         if (CMD_NAME === 'consignes') {
-            const flyEmoji = client.emojis.cache.get('714097004367839282')
             const Consignes1 = new MessageEmbed()
                 .setColor('#33e9ff')
                 .setTitle('<a:QuestionMarkGuy:751206439812464722> 𝙻𝙴𝚂 𝚁𝙴𝙶𝙻𝙴𝚂 𝙳𝙴 𝙻𝙰 𝙲𝙷𝙰𝚄𝙼𝙸𝙴𝚁𝙴 <a:QuestionMarkGuy:751206439812464722>')
