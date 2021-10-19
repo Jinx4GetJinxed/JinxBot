@@ -50,20 +50,27 @@ client.on('messageCreate', async (message) => {
                 Consignes2(message);
             }
         }
-    }
 
+    }
     if (message.content.toLowerCase().includes('gold')) {
-        Gold(message);
+        Gold(message)
     }
 
     if (message.content.toLowerCase().includes('hello')) {
-        Hello(message);
+        Hello(message)
     }
-
 });
 
-
-client.on('messageReactionAdd', async (reaction, user) => {
-});
-
+client.on('messageReactionAdd',async (reaction, user) => {
+    if(reaction.message.partial) await reaction.message.fetch();
+    if(reaction.partial) await reaction.fetch();
+    if(user.bot) return;
+    if(!reaction.message.guild) return;
+    
+    if(reaction.message.channel.id == channel){
+        if(reaction.emoji.name === GTA5_emoji){
+            await reaction.message.guild.members.cache.get(user.id).roles.add(GTA5_role)
+        }
+    }
+})
 client.login(process.env.DISCORDJS_BOT_TOKEN);
