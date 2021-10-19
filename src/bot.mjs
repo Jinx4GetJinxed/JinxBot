@@ -1,5 +1,5 @@
 import { } from 'dotenv/config';
-import { Client, Intents, MessageEmbed } from 'discord.js';
+import { Client, Intents} from 'discord.js';
 import { Gold, Hello } from './cmd_startwith.js';
 import { kick_id, ban_id } from './moderator_function.js';
 import { bio, status } from './statut.js';
@@ -50,15 +50,16 @@ client.on('messageCreate', async (message) => {
                 Consignes2(message);
             }
         }
-
     }
+
     if (message.content.toLowerCase().includes('gold')) {
-        Gold(message)
+        Gold(message);
     }
 
     if (message.content.toLowerCase().includes('hello')) {
-        Hello(message)
+        Hello(message);
     }
+
 });
 
 
