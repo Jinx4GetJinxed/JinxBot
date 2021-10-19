@@ -47,7 +47,7 @@ client.on('messageCreate', async (message) => {
         if (CMD_NAME === 'consignes') {
             if (message.member.permissions.has('ADMINISTRATOR')) {
                 Consignes1(message);
-                Consignes2(message)
+                Consignes2(message);
             }
         }
 
