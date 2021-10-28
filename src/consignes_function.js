@@ -55,8 +55,8 @@ export function Consignes1(message) {
 }
 
 
-export function Consignes2(message) {
-    return message.channel.send({
+export async function Consignes2(message) {
+    return await message.channel.send({
         embeds: [{
             color: "#036ffc",
             description: "**𝖠𝗃𝗈𝗎𝗍𝖾𝗓 𝗏𝗈𝗌 𝗃𝖾𝗎𝗑 𝗆𝗎𝗅𝗍𝗂𝗃𝗈𝗎𝖾𝗎𝗋𝗌 𝖿𝖺𝗏𝗈𝗋𝗂𝗌 𝖾𝗇 𝖼𝗅𝗂𝗊𝗎𝖺𝗇𝗍 𝗌𝗎𝗋 𝗅𝖾𝗌 𝖾𝗆𝗈𝗃𝗂𝗌 𝖼𝗂-𝖽𝖾𝗌𝗌𝗈𝗎𝗌.** \n ↓      ↓      ↓      ↓      ↓      ↓      ↓      ↓      ↓     ↓",

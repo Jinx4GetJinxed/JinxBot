@@ -1,13 +1,13 @@
 import { } from 'dotenv/config';
-import { Client, Intents} from 'discord.js';
+import { Client, Intents } from 'discord.js';
 import { Gold, Hello } from './cmd_startwith.js';
 import { kick_id, ban_id } from './moderator_function.js';
 import { bio, status } from './statut.js';
 import { Consignes1, Consignes2 } from './consignes_function.js';
+import { partialMessage, roleAdd, roleRemove } from './function_roles.js';
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] }, { partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] }, { partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 const PREFIX = "Jinx "
-
 
 client.on('ready', () => {
 
@@ -24,7 +24,6 @@ client.on('ready', () => {
     console.log(`le bot ${client.user.tag} est connecté`)
 
 });
-
 
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
@@ -52,6 +51,7 @@ client.on('messageCreate', async (message) => {
         }
 
     }
+
     if (message.content.toLowerCase().includes('gold')) {
         Gold(message)
     }
@@ -61,16 +61,16 @@ client.on('messageCreate', async (message) => {
     }
 });
 
-client.on('messageReactionAdd',async (reaction, user) => {
-    if(reaction.message.partial) await reaction.message.fetch();
-    if(reaction.partial) await reaction.fetch();
-    if(user.bot) return;
-    if(!reaction.message.guild) return;
-    
-    if(reaction.message.channel.id == channel){
-        if(reaction.emoji.name === GTA5_emoji){
-            await reaction.message.guild.members.cache.get(user.id).roles.add(GTA5_role)
-        }
-    }
-})
+client.on('messageReactionAdd', async (reaction, user) => {
+    partialMessage(reaction)
+
+    roleAdd(reaction, user)
+});
+
+client.on('messageReactionRemove', async (reaction, user) => {
+    partialMessage(reaction)
+
+    roleRemove(reaction, user)
+});
+
 client.login(process.env.DISCORDJS_BOT_TOKEN);
