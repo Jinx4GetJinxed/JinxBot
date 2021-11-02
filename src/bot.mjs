@@ -62,13 +62,35 @@ client.on('messageCreate', async (message) => {
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {
-    partialMessage(reaction)
+    if (reaction.partial) {
+        try {
+            await reaction.fetch();
+
+        } catch (error) {
+            console.error('Une erreur est apparue à cause du fetch:', error);
+            return;
+        }
+
+    }
+    console.log(`le message de ${reaction.message.author} à une nouvelle réaction nommée " ${reaction.emoji.name}""`);
+	console.log(`${reaction.count} utilisateur(s) ont réagi à ce message`)
 
     roleAdd(reaction, user)
 });
 
 client.on('messageReactionRemove', async (reaction, user) => {
-    partialMessage(reaction)
+    if (reaction.partial) {
+        try {
+            await reaction.fetch();
+
+        } catch (error) {
+            console.error('Une erreur est apparue à cause du fetch:', error);
+            return;
+        }
+
+    }
+    console.log(`le message de ${reaction.message.author} à une nouvelle réaction nommée " ${reaction.emoji.name}""`);
+	console.log(`${reaction.count} utilisateur(s) ont réagi à ce message`);
 
     roleRemove(reaction, user)
 });

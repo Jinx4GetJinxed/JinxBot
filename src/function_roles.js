@@ -39,21 +39,19 @@ export async function partialMessage(reaction) {
     if (reaction.partial) {
         try {
             await reaction.fetch();
+
         } catch (error) {
-            console.error('Something went wrong when fetching the message:', error);
+            console.error('Une erreur est apparue à cause du fetch:', error);
             return;
         }
-    }
 
-    console.log(`${reaction.message.author.name}'s message "${reaction.message.content}" gained a reaction!`);
-    console.log(`${reaction.count} user(s) have given the same reaction to this message!`);
+    }
+    console.log(`le message de ${reaction.message.author} à une nouvelle réaction nommée " ${reaction.emoji.name}""`);
+	console.log(`${reaction.count} utilisateur(s) ont réagi à ce message`);
 }
 
 export async function roleAdd(reaction, user) {
     if (!user.bot) {
-        if (reaction.message.partial) await reaction.message.fetch()
-        if (reaction.partial) await reaction.fetch()
-
         const { guild } = reaction.message
         const member = guild.members.cache.find(member => member.id === user.id);
 
@@ -66,9 +64,6 @@ export async function roleAdd(reaction, user) {
 
 export async function roleRemove(reaction, user) {
     if (!user.bot) {
-        if (reaction.message.partial) await reaction.message.fetch()
-        if (reaction.partial) await reaction.fetch()
-
         const { guild } = reaction.message
         const member = guild.members.cache.find(member => member.id === user.id);
 
