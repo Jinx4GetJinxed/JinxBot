@@ -38,7 +38,7 @@ function emojiChoice(emojiId, reaction) {
 export async function partialMessage(reaction) {
     if (reaction.partial) {
         try {
-            await reaction.fetch();
+            await reaction.message.fetch();
 
         } catch (error) {
             console.error('Une erreur est apparue à cause du fetch:', error);
@@ -46,11 +46,19 @@ export async function partialMessage(reaction) {
         }
 
     }
-    console.log(`le message de ${reaction.message.author} à une nouvelle réaction nommée " ${reaction.emoji.name}""`);
+}
+
+export async function msgAddReaction(reaction) {
+    console.log(`le message de ${reaction.message.author} a gagné une nouvelle réaction nommée " ${reaction.emoji.name} "`);
 	console.log(`${reaction.count} utilisateur(s) ont réagi à ce message`);
 }
 
-export async function roleAdd(reaction, user) {
+export async function msgRemoveReaction(reaction) {
+    console.log(`le message de ${reaction.message.author} a perdu une réaction nommée " ${reaction.emoji.name} "`);
+	console.log(`${reaction.count} utilisateur(s) ont réagi à ce message`);
+}
+
+export async function roleAddJeux(reaction, user) {
     if (!user.bot) {
         const { guild } = reaction.message
         const member = guild.members.cache.find(member => member.id === user.id);
@@ -58,11 +66,10 @@ export async function roleAdd(reaction, user) {
         let role = emojiChoice(reaction.emoji.id, reaction)
 
         await member.roles.add(role)
-
     }
 }
 
-export async function roleRemove(reaction, user) {
+export async function roleRemoveJeux(reaction, user) {
     if (!user.bot) {
         const { guild } = reaction.message
         const member = guild.members.cache.find(member => member.id === user.id);

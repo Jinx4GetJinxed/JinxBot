@@ -1,9 +1,8 @@
 const activities = [
     { type: 'PLAYING',  message: 'à faire un PENTAKILL'  },
-    { type: 'PLAYING',  message: 'à me faire coder'  },
+    { type: 'PLAYING',  message: 'me faire coder'  },
     { type: 'WATCHING', message: 'JavaScript >>> Python' },
     { type: 'WATCHING', message: 'Get Jinxed' },
-    { type: 'LISTENING', message: 'Baahhh tu stalk'},
 ];
 
 const statut_choix = [

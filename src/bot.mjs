@@ -3,10 +3,13 @@ import { Client, Intents } from 'discord.js';
 import { Gold, Hello } from './cmd_startwith.js';
 import { kick_id, ban_id } from './moderator_function.js';
 import { bio, status } from './statut.js';
-import { Consignes1, Consignes2 } from './consignes_function.js';
-import { partialMessage, roleAdd, roleRemove } from './function_roles.js';
+import { Consignes1, Consignes2, Consignes3 } from './consignes_function.js';
+import { partialMessage, roleAddJeux, roleRemoveJeux, msgAddReaction, msgRemoveReaction } from './function_roles.js';
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] }, { partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
+const client = new Client({
+	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],
+	partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
+});
 const PREFIX = "Jinx "
 
 client.on('ready', () => {
@@ -45,8 +48,10 @@ client.on('messageCreate', async (message) => {
         /** Fonction pour afficher les consignes */
         if (CMD_NAME === 'consignes') {
             if (message.member.permissions.has('ADMINISTRATOR')) {
+                setTimeout(() => message.delete(), 1000);
                 Consignes1(message);
                 Consignes2(message);
+                Consignes3(message)
             }
         }
 
@@ -62,37 +67,17 @@ client.on('messageCreate', async (message) => {
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {
-    if (reaction.partial) {
-        try {
-            await reaction.fetch();
+    partialMessage(reaction)
+    msgAddReaction(reaction)
 
-        } catch (error) {
-            console.error('Une erreur est apparue à cause du fetch:', error);
-            return;
-        }
-
-    }
-    console.log(`le message de ${reaction.message.author} à une nouvelle réaction nommée " ${reaction.emoji.name}""`);
-	console.log(`${reaction.count} utilisateur(s) ont réagi à ce message`)
-
-    roleAdd(reaction, user)
+    roleAddJeux(reaction, user)
 });
 
 client.on('messageReactionRemove', async (reaction, user) => {
-    if (reaction.partial) {
-        try {
-            await reaction.fetch();
+    partialMessage(reaction)
+    msgRemoveReaction(reaction)
 
-        } catch (error) {
-            console.error('Une erreur est apparue à cause du fetch:', error);
-            return;
-        }
-
-    }
-    console.log(`le message de ${reaction.message.author} à une nouvelle réaction nommée " ${reaction.emoji.name}""`);
-	console.log(`${reaction.count} utilisateur(s) ont réagi à ce message`);
-
-    roleRemove(reaction, user)
+    roleRemoveJeux(reaction, user)
 });
 
 client.login(process.env.DISCORDJS_BOT_TOKEN);
