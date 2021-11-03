@@ -6,6 +6,7 @@
   "name": "jinx_bot",
   "version": "1.0.0",
   "description": "",
+  "engines": { "node": "16.11.0" },
   "main": "index.js",
   "type": "module",
   "module": "commonjs",
