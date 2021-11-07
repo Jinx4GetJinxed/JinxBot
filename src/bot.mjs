@@ -1,5 +1,5 @@
 import { } from "dotenv/config";
-import { Client, Intents } from "discord.js";
+import { Client, Intents, Collection } from "discord.js";
 import { Gold, Hello } from "./cmd_startwith.js";
 import { kick_id, ban_id } from "./moderator_function.js";
 import { bio, status } from "./statut.js";
@@ -12,18 +12,26 @@ import {
     msgRemoveReaction
 } from "./function_roles.js";
 import { DisTube } from "distube"
-import { fs } from "fs"
-import { config } from "./config.json"
+import * as fs from 'fs'
+import * as data from './config.json';
 import { SpotifyPlugin } from "@distube/spotify"
+const client = new Client({
+    intents: [
+        Intents.FLAGS.GUILDS,
+        Intents.FLAGS.GUILD_MESSAGES,
+        Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+        Intents.FLAGS.GUILD_VOICE_STATES
+    ],
+    partials: ["MESSAGE", "CHANNEL", "REACTION"]
+});
 
-client.config = require("./config.json")
 client.distube = new DisTube(client, {
     emitNewSongOnly: true,
     plugins: [new SpotifyPlugin()]
 })
-client.commands = new Discord.Collection()
-client.aliases = new Discord.Collection()
-client.emotes = config.emoji
+client.commands = new Collection()
+client.aliases = new Collection()
+client.emotes = data.emoji
 
 fs.readdir("./commands/", (err, files) => {
     if (err) return console.log("Impossible de trouver des commandes!")
@@ -36,15 +44,6 @@ fs.readdir("./commands/", (err, files) => {
         if (cmd.aliases) cmd.aliases.forEach(alias => client.aliases.set(alias, cmd.name))
     })
 })
-
-const client = new Client({
-    intents: [
-        Intents.FLAGS.GUILDS,
-        Intents.FLAGS.GUILD_MESSAGES,
-        Intents.FLAGS.GUILD_MESSAGE_REACTIONS
-    ],
-    partials: ["MESSAGE", "CHANNEL", "REACTION"]
-});
 const PREFIX = "Jinx ";
 
 client.on("ready", () => {
@@ -92,8 +91,7 @@ client.on("messageCreate", async message => {
 
     const prefix = config.prefix
     if (!message.content.startsWith(prefix)) return
-    const args = message.content.slice(prefix.length).trim().split(/ +/g)
-    const command = args.shift().toLowerCase()
+    const command = args.shift()
     const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command))
     if (!cmd) return
     if (cmd.inVoiceChannel && !message.member.voice.channel) return message.channel.send(`${client.emotes.error} | Tu dois être dans un canal vocal chacal!`)
