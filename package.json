@@ -6,6 +6,7 @@
   "name": "jinx_bot",
   "version": "1.0.0",
   "description": "",
+  "engines": { "node": "16.11.0" },
   "main": "index.js",
   "type": "module",
   "module": "commonjs",
@@ -22,6 +23,7 @@
     "discord.js": "^13.2.0",
     "dotenv": "^10.0.0",
     "emoji-unicode": "^2.0.1",
+    "glitch-api": "^3.1.0",
     "nodemon": "^2.0.13"
   },
   "devDependencies": {

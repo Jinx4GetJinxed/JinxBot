@@ -1,13 +1,16 @@
 import { } from 'dotenv/config';
-import { Client, Intents, MessageEmbed } from 'discord.js';
+import { Client, Intents } from 'discord.js';
 import { Gold, Hello } from './cmd_startwith.js';
 import { kick_id, ban_id } from './moderator_function.js';
 import { bio, status } from './statut.js';
-import { Consignes1, Consignes2 } from './consignes_function.js';
+import { Consignes1, Consignes2, Consignes3 } from './consignes_function.js';
+import { partialMessage, roleAddJeux, roleRemoveJeux, msgAddReaction, msgRemoveReaction } from './function_roles.js';
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] }, { partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
+const client = new Client({
+	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],
+	partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
+});
 const PREFIX = "Jinx "
-
 
 client.on('ready', () => {
 
@@ -24,7 +27,6 @@ client.on('ready', () => {
     console.log(`le bot ${client.user.tag} est connecté`)
 
 });
-
 
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
@@ -46,12 +48,15 @@ client.on('messageCreate', async (message) => {
         /** Fonction pour afficher les consignes */
         if (CMD_NAME === 'consignes') {
             if (message.member.permissions.has('ADMINISTRATOR')) {
+                setTimeout(() => message.delete(), 1000);
                 Consignes1(message);
-                Consignes2(message)
+                Consignes2(message);
+                Consignes3(message)
             }
         }
 
     }
+
     if (message.content.toLowerCase().includes('gold')) {
         Gold(message)
     }
@@ -61,8 +66,18 @@ client.on('messageCreate', async (message) => {
     }
 });
 
-
 client.on('messageReactionAdd', async (reaction, user) => {
+    partialMessage(reaction)
+    msgAddReaction(reaction)
+
+    roleAddJeux(reaction, user)
+});
+
+client.on('messageReactionRemove', async (reaction, user) => {
+    partialMessage(reaction)
+    msgRemoveReaction(reaction)
+
+    roleRemoveJeux(reaction, user)
 });
 
 client.login(process.env.DISCORDJS_BOT_TOKEN);

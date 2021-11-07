@@ -43,7 +43,7 @@ export function Consignes1(message) {
             {
                 name: `\u200B\n ***Plus on est fou, plus on rit !!!***`,
                 value: `\u200B\n ***- Sois un maximum actif <a:GetNaeNae:751206487631593552> et n'hésite pas à inviter tous tes potes !***
-                                    \u200B\n ***- N'oublie pas de passer par la case <#534095413662449675> pour que l'on se connaisse un petit peu mieux.***
+                                    \u200B\n ***- N'oublie pas de passer par la case*** <#534095413662449675> ***pour que l'on se connaisse un petit peu mieux.***
                                     \u200B\n ***- Le but de ce serveur est que tout le monde s'y sente bien. Alors, en cas de problème, contacte moi.***
                                     \u200B\n  <a:Dancing:784970376831696897> **Bon amusement l'élite !!! **<a:PartyCat:751206416760569876>`
             }],
@@ -55,8 +55,8 @@ export function Consignes1(message) {
 }
 
 
-export function Consignes2(message) {
-    return message.channel.send({
+export async function Consignes2(message) {
+    return await message.channel.send({
         embeds: [{
             color: "#036ffc",
             description: "**𝖠𝗃𝗈𝗎𝗍𝖾𝗓 𝗏𝗈𝗌 𝗃𝖾𝗎𝗑 𝗆𝗎𝗅𝗍𝗂𝗃𝗈𝗎𝖾𝗎𝗋𝗌 𝖿𝖺𝗏𝗈𝗋𝗂𝗌 𝖾𝗇 𝖼𝗅𝗂𝗊𝗎𝖺𝗇𝗍 𝗌𝗎𝗋 𝗅𝖾𝗌 𝖾𝗆𝗈𝗃𝗂𝗌 𝖼𝗂-𝖽𝖾𝗌𝗌𝗈𝗎𝗌.** \n ↓      ↓      ↓      ↓      ↓      ↓      ↓      ↓      ↓     ↓",
@@ -76,5 +76,20 @@ export function Consignes2(message) {
             M.react("<a:LoL:836830253103710278>")
             M.react("<a:CoD:836837582910390272>")
             M.react("<a:WoW:851133762791276555>")
+        })
+}
+
+export async function Consignes3(message) {
+    return await message.channel.send({
+        embeds: [{
+            color: "#8236FF",
+            description:`**- Clique sur l'emote pour sélectionner les langues que tu parles.\n- Click on the emote to pick the language you speak.**\n↓      ↓      ↓      ↓      ↓      ↓      ↓      ↓      ↓     ↓`,
+        }]}).then(M => {
+            M.react("🇫🇷")
+            M.react("🇬🇧")
+            M.react("🇪🇸")
+            M.react("🇷🇺")
+            M.react("🇳🇱")
+            M.react("🇩🇪")
         })
 }
