@@ -1,4 +1,4 @@
-export async function kick_id(message, args) {
+async function kick_id(message, args) {
     if (!message.member.permissions.has('KICK_MEMBERS'))
         return message.reply('tu ne peux pas utiliser cette commande ptit branleur');
 
@@ -15,7 +15,7 @@ export async function kick_id(message, args) {
     }
 }
 
-export async function ban_id(message, args) {
+async function ban_id(message, args) {
     if (!message.member.permissions.has('BAN_MEMBERS'))
         return message.reply('tu ne peux pas utiliser cette commande sale étron');
 
@@ -30,3 +30,5 @@ export async function ban_id(message, args) {
         message.channel.send('je ne l\'ai pas trouvé ce fdp')
     }
 }
+
+module.exports = { kick_id, ban_id }

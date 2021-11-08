@@ -1,20 +1,18 @@
-import { } from "dotenv/config";
-import { Client, Intents, Collection } from "discord.js";
-import { Gold, Hello } from "./cmd_startwith.js";
-import { kick_id, ban_id } from "./moderator_function.js";
+import { } from "dotenv/config"
+import { Client, Intents, Collection } from "discord.js"
+import { Gold, Hello } from './cmd_startwith.js'
+import { kick_id, ban_id } from"./moderator_function.js"
 import { bio, status } from "./statut.js";
-import { Consignes1, Consignes2, Consignes3 } from "./consignes_function.js";
-import {
-    partialMessage,
-    roleAdd,
-    roleRemove,
-    msgAddReaction,
-    msgRemoveReaction
-} from "./function_roles.js";
+import { Consignes1, Consignes2, Consignes3 }  from './consignes_function.js';
+import { partialMessage,roleAdd,roleRemove,msgAddReaction,msgRemoveReaction } from "./function_roles.js";
 import { DisTube } from "distube"
-import * as fs from 'fs'
-import * as data from './config.json';
 import { SpotifyPlugin } from "@distube/spotify"
+
+import { createRequire } from "module"; 
+const require = createRequire(import.meta.url); 
+const config = require("./config.json") 
+
+const fs = require('fs')
 const client = new Client({
     intents: [
         Intents.FLAGS.GUILDS,
@@ -31,15 +29,17 @@ client.distube = new DisTube(client, {
 })
 client.commands = new Collection()
 client.aliases = new Collection()
-client.emotes = data.emoji
+client.emotes = config.emoji;
 
-fs.readdir("./commands/", (err, files) => {
-    if (err) return console.log("Impossible de trouver des commandes!")
+client.commands = new Collection();
+
+fs.readdir("./src/commands/", (err, files) => {
+    if (err) return console.log("Could not find any commands!")
     const jsFiles = files.filter(f => f.split(".").pop() === "js")
-    if (jsFiles.length <= 0) return console.log("Impossible de trouver des commandes!")
+    if (jsFiles.length <= 0) return console.log("Could not find any commands!")
     jsFiles.forEach(file => {
         const cmd = require(`./commands/${file}`)
-        console.log(`Chargé ${file}`)
+        console.log(`Loaded ${file}`)
         client.commands.set(cmd.name, cmd)
         if (cmd.aliases) cmd.aliases.forEach(alias => client.aliases.set(alias, cmd.name))
     })
@@ -89,8 +89,8 @@ client.on("messageCreate", async message => {
         }
     }
 
-    const prefix = config.prefix
-    if (!message.content.startsWith(prefix)) return
+    const prefix2 = config.prefix
+    if (!message.content.startsWith(prefix2)) return
     const command = args.shift()
     const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command))
     if (!cmd) return

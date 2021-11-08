@@ -1,4 +1,4 @@
-export function Consignes1(message) {
+function Consignes1(message) {
     return message.channel.send({
         embeds: [{
             color: '#33e9ff',
@@ -54,8 +54,7 @@ export function Consignes1(message) {
     });
 }
 
-
-export async function Consignes2(message) {
+async function Consignes2(message) {
     return await message.channel.send({
         embeds: [{
             color: "#036ffc",
@@ -79,7 +78,7 @@ export async function Consignes2(message) {
         })
 }
 
-export async function Consignes3(message) {
+async function Consignes3(message) {
     return await message.channel.send({
         embeds: [{
             color: "#8236FF",
@@ -93,3 +92,5 @@ export async function Consignes3(message) {
             M.react("🇩🇪")
         })
 }
+
+module.exports = { Consignes1, Consignes2, Consignes3}

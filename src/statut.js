@@ -11,10 +11,12 @@ const statut_choix = [
     'online'
 ];
 
-export function bio() {
+function bio() {
     return activities[Math.floor(Math.random() * (activities.length - 1) + 1)];
 }
 
-export function status(){
+function status(){
     return statut_choix[Math.floor(Math.random() * (statut_choix.length - 1) + 1)];
 }
+
+module.exports = { bio, status }
