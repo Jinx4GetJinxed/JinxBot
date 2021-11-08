@@ -1,16 +1,17 @@
 import { } from "dotenv/config"
 import { Client, Intents, Collection } from "discord.js"
 import { Gold, Hello } from './cmd_startwith.js'
-import { kick_id, ban_id } from"./moderator_function.js"
+import { kick_id, ban_id } from "./moderator_function.js"
 import { bio, status } from "./statut.js";
-import { Consignes1, Consignes2, Consignes3 }  from './consignes_function.js';
-import { partialMessage,roleAdd,roleRemove,msgAddReaction,msgRemoveReaction } from "./function_roles.js";
+import { Consignes1, Consignes2, Consignes3 } from './consignes_function.js';
+import { partialMessage, roleAdd, roleRemove, msgAddReaction, msgRemoveReaction } from "./function_roles.js";
 import { DisTube } from "distube"
 import { SpotifyPlugin } from "@distube/spotify"
+import { SoundCloudPlugin } from "@distube/soundcloud";
 
-import { createRequire } from "module"; 
-const require = createRequire(import.meta.url); 
-const config = require("./config.json") 
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const config = require("./config.json")
 
 const fs = require('fs')
 const client = new Client({
@@ -22,6 +23,7 @@ const client = new Client({
     ],
     partials: ["MESSAGE", "CHANNEL", "REACTION"]
 });
+const PREFIX = "Jinx ";
 
 client.distube = new DisTube(client, {
     emitNewSongOnly: true,
@@ -30,7 +32,6 @@ client.distube = new DisTube(client, {
 client.commands = new Collection()
 client.aliases = new Collection()
 client.emotes = config.emoji;
-
 client.commands = new Collection();
 
 fs.readdir("./src/commands/", (err, files) => {
@@ -44,7 +45,6 @@ fs.readdir("./src/commands/", (err, files) => {
         if (cmd.aliases) cmd.aliases.forEach(alias => client.aliases.set(alias, cmd.name))
     })
 })
-const PREFIX = "Jinx ";
 
 client.on("ready", () => {
     setInterval(() => {
@@ -90,10 +90,9 @@ client.on("messageCreate", async message => {
     }
 
     const prefix2 = config.prefix
-    if (!message.content.startsWith(prefix2)) return
-    const command = args.shift()
-    const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command))
-    if (!cmd) return
+    if (!message.content.startsWith(prefix2)) return;
+    const cmd = client.commands.get(CMD_NAME) || client.commands.get(client.aliases.get(CMD_NAME))
+    if (!cmd) return;
     if (cmd.inVoiceChannel && !message.member.voice.channel) return message.channel.send(`${client.emotes.error} | Tu dois être dans un canal vocal chacal!`)
     try {
         cmd.run(client, message, args)
