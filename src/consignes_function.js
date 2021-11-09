@@ -58,7 +58,7 @@ async function Consignes2(message) {
     return await message.channel.send({
         embeds: [{
             color: "#036ffc",
-            description: "**𝖠𝗃𝗈𝗎𝗍𝖾𝗓 𝗏𝗈𝗌 𝗃𝖾𝗎𝗑 𝗆𝗎𝗅𝗍𝗂𝗃𝗈𝗎𝖾𝗎𝗋𝗌 𝖿𝖺𝗏𝗈𝗋𝗂𝗌 𝖾𝗇 𝖼𝗅𝗂𝗊𝗎𝖺𝗇𝗍 𝗌𝗎𝗋 𝗅𝖾𝗌 𝖾𝗆𝗈𝗃𝗂𝗌 𝖼𝗂-𝖽𝖾𝗌𝗌𝗈𝗎𝗌.** \n ↓      ↓      ↓      ↓      ↓      ↓      ↓      ↓      ↓     ↓",
+            description: "**Ajoutez vos jeux favoris en cliquant sur les émojis ci-dessous.** \n ↓      ↓      ↓      ↓      ↓      ↓      ↓      ↓      ↓     ↓",
         }]}).then(M => {
             M.react("<a:GTA:754311739620720783>")
             M.react("<a:RB6:754313462443671653>")
@@ -93,4 +93,29 @@ async function Consignes3(message) {
         })
 }
 
-module.exports = { Consignes1, Consignes2, Consignes3}
+async function Consignes4(message) {
+    return await message.channel.send({
+        embeds: [{
+            color: "#e633ff",
+            description: `**- Réagis avec l'emote qui te correspond le mieux:
+                            👨‍🌾 pour <@&907619111775916062>
+                            👩‍🌾 pour <@&907621552005218314>
+                            🧝‍♂️ pour <@&907630684003241984>
+                            ↓      ↓      ↓      ↓      ↓      ↓      ↓      ↓     ↓**`
+    }]}).then(M => {
+        M.react("👨‍🌾")
+        M.react("👩‍🌾")
+        M.react("🧝‍♂️")
+    })
+}
+
+async function Consignes5(message) {
+    return await message.channel.send({
+        embeds: [{
+            color: "ff3339",
+            description:`- Si tu souhaites être notifié dès qu'il y a une annonce sur le serveur, clique sur l'emote 🔔  ci-dessous et tu obtiendras le rôle @𝘼𝙣𝙣𝙤𝙣𝙘𝙚 ! 
+                            - Pour confirmer que tu agrées aux règles du serveur, clique sur l'emote ✅ ci-dessous
+                            ↓      ↓      ↓      ↓      ↓      ↓      ↓`
+    }]})
+}
+module.exports = { Consignes1, Consignes2, Consignes3, Consignes4, Consignes5}

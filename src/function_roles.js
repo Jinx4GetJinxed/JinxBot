@@ -1,3 +1,5 @@
+const { Channel } = require("discord.js");
+
 function emojiChoiceJeux(emojiId, reaction) {
   var role = (() => {
     switch (emojiId) {
@@ -152,25 +154,25 @@ async function msgRemoveReaction(reaction) {
 }
 
 async function roleAdd(reaction, user) {
-  if (!user.bot) {
-    const { guild } = reaction.message;
-    const member = guild.members.cache.find(member => member.id === user.id);
+    if (!user.bot) {
+      const { guild } = reaction.message;
+      const member = guild.members.cache.find(member => member.id === user.id);
 
-    var role = emojiChoiceJeux(reaction.emoji.id, reaction);
-    if (role == "") {
-      var role = emojiChoiceLang(reaction.emoji.name, reaction);
+      var role = emojiChoiceJeux(reaction.emoji.id, reaction);
       if (role == "") {
+        var role = emojiChoiceLang(reaction.emoji.name, reaction);
+        if (role == "") {
 
+        } else {
+          var rolePlus = reaction.message.guild.roles.cache.find(r => r.id === "818431514923630613");
+        }
       } else {
-        var rolePlus = reaction.message.guild.roles.cache.find(r => r.id === "818431514923630613");
+        var rolePlus = reaction.message.guild.roles.cache.find(r => r.id === "818430111057313822");
       }
-    } else {
-      var rolePlus = reaction.message.guild.roles.cache.find(r => r.id === "818430111057313822");
-    }
 
-    await member.roles.add(role);
-    await member.roles.add(rolePlus);
-  }
+      await member.roles.add(role);
+      await member.roles.add(rolePlus);
+    }
 }
 
 async function roleRemove(reaction, user) {
@@ -186,4 +188,4 @@ async function roleRemove(reaction, user) {
   }
 }
 
-module.exports = { partialMessage, msgAddReaction, msgRemoveReaction, roleAdd, roleRemove}
+module.exports = { partialMessage, msgAddReaction, msgRemoveReaction, roleAdd, roleRemove }

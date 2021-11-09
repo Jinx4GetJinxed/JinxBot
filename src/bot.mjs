@@ -3,7 +3,7 @@ import { Client, Intents, Collection } from "discord.js"
 import { Gold, Hello } from './cmd_startwith.js'
 import { kick_id, ban_id } from "./moderator_function.js"
 import { bio, status } from "./statut.js";
-import { Consignes1, Consignes2, Consignes3 } from './consignes_function.js';
+import { Consignes1, Consignes2, Consignes3, Consignes4, Consignes5 } from './consignes_function.js';
 import { partialMessage, roleAdd, roleRemove, msgAddReaction, msgRemoveReaction } from "./function_roles.js";
 import { DisTube } from "distube"
 import { SpotifyPlugin } from "@distube/spotify"
@@ -27,7 +27,7 @@ const PREFIX = "Jinx ";
 
 client.distube = new DisTube(client, {
     emitNewSongOnly: true,
-    plugins: [new SpotifyPlugin()]
+    plugins: [new SpotifyPlugin(), new SoundCloudPlugin()]
 })
 client.commands = new Collection()
 client.aliases = new Collection()
@@ -80,28 +80,41 @@ client.on("messageCreate", async message => {
 
         /** Fonction pour afficher les consignes */
         if (CMD_NAME === "consignes") {
+            setTimeout(() => message.delete(), 1000);
             if (message.member.permissions.has("ADMINISTRATOR")) {
-                setTimeout(() => message.delete(), 1000);
-                Consignes1(message);
-                Consignes2(message);
-                Consignes3(message);
+                if (message.channel.id === "833824151671930920") {
+                    Consignes1(message);
+                    Consignes2(message);
+                    Consignes3(message);
+                    Consignes4(message)
+                    Consignes5(message)
+                } else {
+                    message.reply("**Tu dois utiliser la commande dans le channel approprié !** ***FDP***").then(msg => { setTimeout(() => msg.delete(), 5000) })
+                }
+            } else {
+                message.reply("**Tu n'as pas le droit d'utiliser cette commande !** ***BG***").then(msg => { setTimeout(() => msg.delete(), 5000) });
             }
         }
     }
 
     if (message.content.startsWith(config.prefix)) {
-        const prefix2 = config.prefix
-        if (!message.content.startsWith(prefix2)) return;
-        const Args = message.content.slice(prefix2.length).trim().split(/ +/g)
-        const command = Args.shift().toLowerCase()
-        const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command))
-        if (!cmd) return console.log("pas bien");
-        if (cmd.inVoiceChannel && !message.member.voice.channel) return message.channel.send(`${client.emotes.error} | Tu dois être dans un canal vocal chacal!`)
-        try {
-            cmd.run(client, message, Args)
-        } catch (e) {
-            console.error(e)
-            message.reply(`Erreur: ${e}`)
+        setTimeout(() => message.delete(), 1000);
+        if (message.channel.id === "474553482691608597") {
+            const prefix2 = config.prefix
+            if (!message.content.startsWith(prefix2)) return;
+            const Args = message.content.slice(prefix2.length).trim().split(/ +/g)
+            const command = Args.shift().toLowerCase()
+            const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command))
+            if (!cmd) return message.reply("**Certes tu demandes mes services, mais je dois faire quoi ?**").then(msg => { setTimeout(() => msg.delete(), 5000) })
+            if (cmd.inVoiceChannel && !message.member.voice.channel) return message.channel.send(`**${client.emotes.error} | Tu dois être dans un canal vocal chacal!**`)
+            try {
+                cmd.run(client, message, Args)
+            } catch (e) {
+                console.error(e)
+                message.reply(`Erreur: ${e}`)
+            }
+        } else {
+            message.reply("**Tu dois utiliser les commandes de musique dans le channel <#474553482691608597> !**").then(msg => { setTimeout(() => msg.delete(), 5000) })
         }
     }
 
@@ -117,15 +130,17 @@ client.on("messageCreate", async message => {
 client.on("messageReactionAdd", async (reaction, user) => {
     partialMessage(reaction);
     msgAddReaction(reaction);
-
-    roleAdd(reaction, user);
+    if (reaction.message.channel.id === "833824151671930920") {
+        roleAdd(reaction, user);
+    }
 });
 
 client.on("messageReactionRemove", async (reaction, user) => {
     partialMessage(reaction);
     msgRemoveReaction(reaction);
-
-    roleRemove(reaction, user);
+    if (reaction.message.channel.id === "833824151671930920") {
+        roleRemove(reaction, user);
+    }
 });
 
 const statut = queue => `Volume: \`${queue.volume}%\` | Filter: \`${queue.filters.join(", ") || "Off"}\` | Loop: \`${queue.repeatMode ? queue.repeatMode === 2 ? "All Queue" : "This Song" : "Off"}\` | Autoplay: \`${queue.autoplay ? "On" : "Off"}\``
