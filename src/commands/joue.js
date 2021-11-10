@@ -1,6 +1,6 @@
 module.exports = {
     name: "play",
-    aliases: ["p"],
+    aliases: ["p","play"],
     inVoiceChannel: true,
     run: async (client, message, args) => {
         const string = args.join(" ")

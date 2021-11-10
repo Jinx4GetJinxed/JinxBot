@@ -128,6 +128,40 @@ function emojiChoiceLang(emojiName, reaction) {
   return role;
 }
 
+function emojiChoiceAutre(emojiName, reaction) {
+  let role = (() => {
+    switch (emojiName) {
+      case "👨‍🌾":
+        return reaction.message.guild.roles.cache.find(
+          r => r.id === "833671414371319860"
+        );
+        break; //Villageois
+      case "👩‍🌾":
+        return reaction.message.guild.roles.cache.find(
+          r => r.id === "742184767348277278"
+        );
+        break; //Villageoise
+      case "🧝‍♂️":
+        return reaction.message.guild.roles.cache.find(
+          r => r.id === "836004059559231508"
+        );
+        break; //Autre
+      case "🔔":
+        return reaction.message.guild.roles.cache.find(
+          r => r.id === "825464585255256104"
+        );
+        break; //Annonce
+      default:
+        return "";
+        break;
+
+    }
+  })();
+  return role;
+}
+
+
+
 async function partialMessage(reaction) {
   if (reaction.partial) {
     try {
@@ -154,25 +188,31 @@ async function msgRemoveReaction(reaction) {
 }
 
 async function roleAdd(reaction, user) {
-    if (!user.bot) {
-      const { guild } = reaction.message;
-      const member = guild.members.cache.find(member => member.id === user.id);
+  if (!user.bot) {
+    const { guild } = reaction.message;
+    const member = guild.members.cache.find(member => member.id === user.id);
 
-      var role = emojiChoiceJeux(reaction.emoji.id, reaction);
+    var role = emojiChoiceJeux(reaction.emoji.id, reaction);
+    if (role == "") {
+      var role = emojiChoiceLang(reaction.emoji.name, reaction);
       if (role == "") {
-        var role = emojiChoiceLang(reaction.emoji.name, reaction);
-        if (role == "") {
-
+        var role = emojiChoiceAutre(reaction.emoji.name, reaction)
+        if (role == "" && reaction.emoji.id == "831672068256563280") {
+          role = reaction.message.guild.roles.cache.find(r => r.id === "559121519100428299");//Online
+          rolePlus = reaction.message.guild.roles.cache.find(r => r.id === "818430859656822804");
         } else {
-          var rolePlus = reaction.message.guild.roles.cache.find(r => r.id === "818431514923630613");
+          rolePlus = reaction.message.guild.roles.cache.find(r => r.id === "818430859656822804");
         }
       } else {
-        var rolePlus = reaction.message.guild.roles.cache.find(r => r.id === "818430111057313822");
+        var rolePlus = reaction.message.guild.roles.cache.find(r => r.id === "818431514923630613");
       }
-
-      await member.roles.add(role);
-      await member.roles.add(rolePlus);
+    } else {
+      var rolePlus = reaction.message.guild.roles.cache.find(r => r.id === "818430111057313822");
     }
+
+    await member.roles.add(role);
+    await member.roles.add(rolePlus);
+  }
 }
 
 async function roleRemove(reaction, user) {
@@ -183,7 +223,13 @@ async function roleRemove(reaction, user) {
     var role = emojiChoiceJeux(reaction.emoji.id, reaction);
     if (role == "") {
       var role = emojiChoiceLang(reaction.emoji.name, reaction);
+    } if (role == "") {
+      var role = emojiChoiceAutre(reaction.emoji.name, reaction)
+      if (role == "" && reaction.emoji.id == "831672068256563280") {
+        role = reaction.message.guild.roles.cache.find(r => r.id === "559121519100428299");//Online
+      }
     }
+    
     await member.roles.remove(role);
   }
 }

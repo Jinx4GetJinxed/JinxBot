@@ -113,9 +113,12 @@ async function Consignes5(message) {
     return await message.channel.send({
         embeds: [{
             color: "ff3339",
-            description:`- Si tu souhaites être notifié dès qu'il y a une annonce sur le serveur, clique sur l'emote 🔔  ci-dessous et tu obtiendras le rôle @𝘼𝙣𝙣𝙤𝙣𝙘𝙚 ! 
+            description:`**- Si tu souhaites être notifié dès qu'il y a une annonce sur le serveur, clique sur l'emote 🔔  ci-dessous et tu obtiendras le rôle <@&907896023777706004>
                             - Pour confirmer que tu agrées aux règles du serveur, clique sur l'emote ✅ ci-dessous
-                            ↓      ↓      ↓      ↓      ↓      ↓      ↓`
-    }]})
+                            ↓      ↓      ↓      ↓      ↓      ↓      ↓**`
+    }]}).then(M =>{
+        M.react("🔔")
+        M.react("<a:Verify:831672068256563280>")
+    })
 }
 module.exports = { Consignes1, Consignes2, Consignes3, Consignes4, Consignes5}

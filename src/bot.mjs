@@ -23,7 +23,7 @@ const client = new Client({
     ],
     partials: ["MESSAGE", "CHANNEL", "REACTION"]
 });
-const PREFIX = "Jinx ";
+const PREFIX = "Jinx!";
 
 client.distube = new DisTube(client, {
     emitNewSongOnly: true,
@@ -52,7 +52,7 @@ client.on("ready", () => {
         client.user.setActivity(Description_Status.message, {
             type: Description_Status.type
         });
-    }, 5000);
+    }, 10000);
 
     setInterval(() => {
         var type_status = status();
@@ -82,7 +82,7 @@ client.on("messageCreate", async message => {
         if (CMD_NAME === "consignes") {
             setTimeout(() => message.delete(), 1000);
             if (message.member.permissions.has("ADMINISTRATOR")) {
-                if (message.channel.id === "833824151671930920") {
+                if (message.channel.id === "481477520236216350") {
                     Consignes1(message);
                     Consignes2(message);
                     Consignes3(message);
@@ -130,7 +130,7 @@ client.on("messageCreate", async message => {
 client.on("messageReactionAdd", async (reaction, user) => {
     partialMessage(reaction);
     msgAddReaction(reaction);
-    if (reaction.message.channel.id === "833824151671930920") {
+    if (reaction.message.channel.id === "481477520236216350") {
         roleAdd(reaction, user);
     }
 });
@@ -138,7 +138,7 @@ client.on("messageReactionAdd", async (reaction, user) => {
 client.on("messageReactionRemove", async (reaction, user) => {
     partialMessage(reaction);
     msgRemoveReaction(reaction);
-    if (reaction.message.channel.id === "833824151671930920") {
+    if (reaction.message.channel.id === "481477520236216350") {
         roleRemove(reaction, user);
     }
 });
