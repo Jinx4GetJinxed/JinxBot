@@ -8,6 +8,7 @@ import { partialMessage, roleAdd, roleRemove, msgAddReaction, msgRemoveReaction 
 import { DisTube } from "distube"
 import { SpotifyPlugin } from "@distube/spotify"
 import { SoundCloudPlugin } from "@distube/soundcloud";
+import { randomColor } from "./random_color.js"
 
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
@@ -100,13 +101,23 @@ client.on("messageCreate", async message => {
     if (message.content.startsWith(config.prefix)) {
         setTimeout(() => message.delete(), 1000);
         if (message.channel.id === "474553482691608597") {
-            const prefix2 = config.prefix
-            if (!message.content.startsWith(prefix2)) return;
-            const Args = message.content.slice(prefix2.length).trim().split(/ +/g)
+            const prefix1 = config.prefix
+            if (!message.content.toLowerCase().startsWith(prefix1)) return;
+            const Args = message.content.slice(prefix1.length).trim().split(/ +/g)
             const command = Args.shift().toLowerCase()
             const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command))
-            if (!cmd) return message.reply("**Certes tu demandes mes services, mais je dois faire quoi ?**").then(msg => { setTimeout(() => msg.delete(), 5000) })
-            if (cmd.inVoiceChannel && !message.member.voice.channel) return message.channel.send(`**${client.emotes.error} | Tu dois être dans un canal vocal chacal!**`)
+            if (!cmd) return message.reply({
+                embeds: [{
+                    color: randomColor(),
+                    description: `\`\`\`xl\n'Certes tu demandes mes services, mais tu me demandes une commande qui n'existe pas'"\`\`\``
+                }]
+            }).then(msg => { setTimeout(() => msg.delete(), 10000) })
+            if (cmd.inVoiceChannel && !message.member.voice.channel) return message.reply({
+                embeds: [{
+                    color: randomColor(),
+                    description: `\`\`\`xl\n${client.emotes.error} | 'Tu dois être dans un canal vocal, chacal!'\`\`\``
+                }]
+            }).then(msg => { setTimeout(() => msg.delete(), 10000) })
             try {
                 cmd.run(client, message, Args)
             } catch (e) {
@@ -114,7 +125,12 @@ client.on("messageCreate", async message => {
                 message.reply(`Erreur: ${e}`)
             }
         } else {
-            message.reply("**Tu dois utiliser les commandes de musique dans le channel <#474553482691608597> !**").then(msg => { setTimeout(() => msg.delete(), 5000) })
+            message.reply({
+                embeds: [{
+                    color: randomColor(),
+                    description: `${client.emotes.error} | Tu dois utiliser cette commande dans le channel <#474553482691608597> !`
+                }]
+            }).then(msg => { setTimeout(() => msg.delete(), 10000) })
         }
     }
 
@@ -142,31 +158,78 @@ client.on("messageReactionRemove", async (reaction, user) => {
         roleRemove(reaction, user);
     }
 });
-
-const statut = queue => `Volume: \`${queue.volume}%\` | Filter: \`${queue.filters.join(", ") || "Off"}\` | Loop: \`${queue.repeatMode ? queue.repeatMode === 2 ? "All Queue" : "This Song" : "Off"}\` | Autoplay: \`${queue.autoplay ? "On" : "Off"}\``
+const statut = queue => `Volume: \`${queue.volume}%\` | Filtre: \`${queue.filters.join(", ") || "Non"}\` | Boucle: \`${queue.repeatMode ? queue.repeatMode === 2 ? "Toute la file d'attente" : "Cette Musique" : "Non"}\` | Autoplay: \`${queue.autoplay ? "On" : "Off"}\``
 client.distube
-    .on("playSong", (queue, song) => queue.textChannel.send(
-        `${client.emotes.play} | Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${song.user}\n${statut(queue)}`
-    ))
-    .on("addSong", (queue, song) => queue.textChannel.send(
-        `${client.emotes.success} | Added ${song.name} - \`${song.formattedDuration}\` to the queue by ${song.user}`
-    ))
-    .on("addList", (queue, playlist) => queue.textChannel.send(
-        `${client.emotes.success} | Added \`${playlist.name}\` playlist (${playlist.songs.length} songs) to queue\n${statut(queue)}`
-    ))
+    .on("playSong", (queue, song) => queue.textChannel.send({
+        embeds: [{
+            color: randomColor(),
+            description: `\`\`\`xl\n${client.emotes.play} | 'Lecture:'\`\`\` \`${song.name}\` - \`${song.formattedDuration}\``
+        }]
+    })
+    )
+    .on("addSong", (queue, song) => queue.textChannel.send({
+        embeds: [{
+            color: randomColor(),
+            description: `\`\`\`xl\n${client.emotes.success} | 'Ajout de la musique:'\`\`\` \`${song.name}\` - \`${song.formattedDuration}\` à la file d'attente par ${song.user}\n${statut(queue)}`
+        }]
+    })
+    )
+    .on("addList", (queue, playlist) => queue.textChannel.send({
+        embeds: [{
+            color: randomColor(),
+            description: `\`\`\`xl\n${client.emotes.success} | 'Ajout de la playlist:'\`\`\` \`${playlist.name}\` (${playlist.songs.length} musiques) à la file d'attente\n${statut(queue)}`
+        }]
+    })
+    )
     // DisTubeOptions.searchSongs = true
     .on("searchResult", (message, result) => {
         let i = 0
-        message.channel.send(`**Choose an option from below**\n${result.map(song => `**${++i}**. ${song.name} - \`${song.formattedDuration}\``).join("\n")}\n*Enter anything else or wait 60 seconds to cancel*`)
-    })
+        message.channel.send({
+            embeds: [{
+                color: randomColor(),
+                description: `\`\`\`xl\n'Choisissez une option parmi les suivantes'\`\`\`\n${result.map(song => `**${++i}**. ${song.name} - \`${song.formattedDuration}\``).join("\n")}\`\`\`xl\n'Entrez autre chose ou attendez 60 secondes pour annuler'\`\`\``
+            }]
+        })
+    }
+    )
     // DisTubeOptions.searchSongs = true
-    .on("searchCancel", message => message.channel.send(`${client.emotes.error} | Searching canceled`))
-    .on("error", (channel, e) => {
-        channel.send(`${client.emotes.error} | An error encountered: ${e}`)
-        console.error(e)
+    .on("searchCancel", message => message.channel.send({
+        embeds: [{
+            color: randomColor(),
+            description: `\`\`\`xl\n${client.emotes.error} | Searching canceled\`\`\``
+        }]
     })
-    .on("empty", channel => channel.send("Voice channel is empty! Leaving the channel..."))
-    .on("searchNoResult", message => message.channel.send(`${client.emotes.error} | No result found!`))
-    .on("finish", queue => queue.textChannel.send("Finished!"))
+    )
+    .on("error", (channel, e) => {
+        channel.send({
+            embeds: [{
+                color: randomColor(),
+                description: `\`\`\`xl\n${client.emotes.error} | 'Une erreur a été rencontrée:' ${e}\`\`\``
+            }]
+        })
+        console.error(e)
+    }
+    )
+    .on("empty", channel => channel.send({
+        embeds: [{
+            color: randomColor(),
+            description: `\`\`\`xl\nLe canal vocal est vide ! Je quitte le canal...\`\`\``
+        }]
+    })
+    )
+    .on("searchNoResult", message => message.channel.send({
+        embeds: [{
+            color: randomColor(),
+            description: `\`\`\`xl\n${client.emotes.error} | Aucun résultat trouvé !\`\`\``
+        }]
+    })
+    )
+    .on("finish", queue => queue.textChannel.send({
+        embeds: [{
+            color: randomColor(),
+            description: `\`\`\`xl\n'Terminé!'\`\`\``
+        }]
+    })
+    )
 
 client.login(process.env.DISCORDJS_BOT_TOKEN);
