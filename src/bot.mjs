@@ -98,18 +98,17 @@ client.on("messageCreate", async message => {
         }
     }
 
-    if (message.content.startsWith(config.prefix)) {
+    if (message.content.toLowerCase().startsWith(config.prefix)) {
         setTimeout(() => message.delete(), 1000);
         if (message.channel.id === "474553482691608597") {
             const prefix1 = config.prefix
-            if (!message.content.toLowerCase().startsWith(prefix1)) return;
             const Args = message.content.slice(prefix1.length).trim().split(/ +/g)
             const command = Args.shift().toLowerCase()
             const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command))
             if (!cmd) return message.reply({
                 embeds: [{
                     color: randomColor(),
-                    description: `\`\`\`xl\n'Certes tu demandes mes services, mais tu me demandes une commande qui n'existe pas'"\`\`\``
+                    description: `\`\`\`py\n"Certes tu demandes mes services, mais tu me demandes une commande qui n'existe pas"\`\`\``
                 }]
             }).then(msg => { setTimeout(() => msg.delete(), 10000) })
             if (cmd.inVoiceChannel && !message.member.voice.channel) return message.reply({
@@ -158,7 +157,7 @@ client.on("messageReactionRemove", async (reaction, user) => {
         roleRemove(reaction, user);
     }
 });
-const statut = queue => `Volume: \`${queue.volume}%\` | Filtre: \`${queue.filters.join(", ") || "Non"}\` | Boucle: \`${queue.repeatMode ? queue.repeatMode === 2 ? "Toute la file d'attente" : "Cette Musique" : "Non"}\` | Autoplay: \`${queue.autoplay ? "On" : "Off"}\``
+const statut = queue => `Volume: \`${queue.volume}%\` | Filtre: \`${queue.filters.join(", ") || "Non"}\` | Boucle: \`${queue.repeatMode ? queue.repeatMode === 2 ? "Toute la file d'attente" : "Cette Musique" : "Non"}\` | Lecture automatique: \`${queue.autoplay ? "Oui" : "Non"}\``
 client.distube
     .on("playSong", (queue, song) => queue.textChannel.send({
         embeds: [{
