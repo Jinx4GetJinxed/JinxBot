@@ -59,38 +59,40 @@ async function Consignes2(message) {
         embeds: [{
             color: "#036ffc",
             description: "**Ajoutez vos jeux favoris en cliquant sur les émojis ci-dessous.** \n ↓      ↓      ↓      ↓      ↓      ↓      ↓      ↓      ↓     ↓",
-        }]}).then(M => {
-            M.react("<a:GTA:754311739620720783>")
-            M.react("<a:RB6:754313462443671653>")
-            M.react("<a:Valorant:754783846066552955>")
-            M.react("<a:TrackMania:754790048020562080>")
-            M.react("<a:RocketLeague:763117629547479100>")
-            M.react("<a:Overwatch:767696668354543638>")
-            M.react("<a:osu:817701721891536976>")
-            M.react("<a:HearthStone:818455019069505566>")
-            M.react("<a:Roblox:818460291305570304>")
-            M.react("<a:Paladins:818479734651486218>")
-            M.react("<a:Forza:818488189370761277>")
-            M.react("<a:Minecraft:831671708665643048>")
-            M.react("<a:LoL:836830253103710278>")
-            M.react("<a:CoD:836837582910390272>")
-            M.react("<a:WoW:851133762791276555>")
-        })
+        }]
+    }).then(M => {
+        M.react("<a:GTA:754311739620720783>")
+        M.react("<a:RB6:754313462443671653>")
+        M.react("<a:Valorant:754783846066552955>")
+        M.react("<a:TrackMania:754790048020562080>")
+        M.react("<a:RocketLeague:763117629547479100>")
+        M.react("<a:Overwatch:767696668354543638>")
+        M.react("<a:osu:817701721891536976>")
+        M.react("<a:HearthStone:818455019069505566>")
+        M.react("<a:Roblox:818460291305570304>")
+        M.react("<a:Paladins:818479734651486218>")
+        M.react("<a:Forza:818488189370761277>")
+        M.react("<a:Minecraft:831671708665643048>")
+        M.react("<a:LoL:836830253103710278>")
+        M.react("<a:CoD:836837582910390272>")
+        M.react("<a:WoW:851133762791276555>")
+    })
 }
 
 async function Consignes3(message) {
     return await message.channel.send({
         embeds: [{
             color: "#8236FF",
-            description:`**- Clique sur l'emote pour sélectionner les langues que tu parles.\n- Click on the emote to pick the language you speak.**\n↓      ↓      ↓      ↓      ↓      ↓      ↓      ↓      ↓     ↓`,
-        }]}).then(M => {
-            M.react("🇫🇷")
-            M.react("🇬🇧")
-            M.react("🇪🇸")
-            M.react("🇷🇺")
-            M.react("🇳🇱")
-            M.react("🇩🇪")
-        })
+            description: `**- Clique sur l'emote pour sélectionner les langues que tu parles.\n- Click on the emote to pick the language you speak.**\n↓      ↓      ↓      ↓      ↓      ↓      ↓      ↓      ↓     ↓`,
+        }]
+    }).then(M => {
+        M.react("🇫🇷")
+        M.react("🇬🇧")
+        M.react("🇪🇸")
+        M.react("🇷🇺")
+        M.react("🇳🇱")
+        M.react("🇩🇪")
+    })
 }
 
 async function Consignes4(message) {
@@ -102,7 +104,8 @@ async function Consignes4(message) {
                             👩‍🌾 pour <@&907621552005218314>
                             🧝‍♂️ pour <@&907630684003241984>
                             ↓      ↓      ↓      ↓      ↓      ↓      ↓      ↓     ↓**`
-    }]}).then(M => {
+        }]
+    }).then(M => {
         M.react("👨‍🌾")
         M.react("👩‍🌾")
         M.react("🧝‍♂️")
@@ -113,12 +116,13 @@ async function Consignes5(message) {
     return await message.channel.send({
         embeds: [{
             color: "ff3339",
-            description:`**- Si tu souhaites être notifié dès qu'il y a une annonce sur le serveur, clique sur l'emote 🔔  ci-dessous et tu obtiendras le rôle <@&907896023777706004>
+            description: `**- Si tu souhaites être notifié dès qu'il y a une annonce sur le serveur, clique sur l'emote 🔔  ci-dessous et tu obtiendras le rôle <@&907896023777706004>
                             - Pour confirmer que tu agrées aux règles du serveur, clique sur l'emote ✅ ci-dessous
                             ↓      ↓      ↓      ↓      ↓      ↓      ↓**`
-    }]}).then(M =>{
+        }]
+    }).then(M => {
         M.react("🔔")
         M.react("<a:Verify:831672068256563280>")
     })
 }
-module.exports = { Consignes1, Consignes2, Consignes3, Consignes4, Consignes5}
+module.exports = { Consignes1, Consignes2, Consignes3, Consignes4, Consignes5 }

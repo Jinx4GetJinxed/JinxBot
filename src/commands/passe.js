@@ -1,15 +1,32 @@
+const { randomColor } = require("../random_color")
+
 module.exports = {
     name: "skip",
     inVoiceChannel: true,
     run: async (client, message, args) => {
         const queue = client.distube.getQueue(message)
         if (!queue)
-            return message.channel.send(`${client.emotes.error} | There is nothing in the queue right now!`)
+            return message.channel.send({
+                embeds: [{
+                    color: randomColor(),
+                    description: `\`\`\`py\n${client.emotes.error} | "Il n'y a rien dans la file d'attente pour le moment !"\`\`\``
+                }]
+            }).then(msg => { setTimeout(() => msg.delete(), 10000) })
         try {
             const song = queue.skip()
-            message.channel.send(`${client.emotes.success} | Skipped! Now playing:\n${song.name}`)
+            message.channel.send({
+                embeds: [{
+                    color: randomColor(),
+                    description: `\`\`\`xl\n${client.emotes.success} | 'Sauté ! En cours de lecture:' \`${song.name}\`\`\`\``
+                }]
+            })
         } catch (e) {
-            message.channel.send(`${client.emotes.error} | ${e}`)
+            message.channel.send({
+                embeds: [{
+                    color: randomColor(),
+                    description: `\`\`\`xl\n${client.emotes.error} | 'Erreur:' \`${e}\`\`\`\``
+                }]
+            })
         }
     }
 }

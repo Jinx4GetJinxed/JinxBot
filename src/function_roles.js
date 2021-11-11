@@ -1,5 +1,3 @@
-const { Channel } = require("discord.js");
-
 function emojiChoiceJeux(emojiId, reaction) {
   var role = (() => {
     switch (emojiId) {
@@ -229,7 +227,7 @@ async function roleRemove(reaction, user) {
         role = reaction.message.guild.roles.cache.find(r => r.id === "559121519100428299");//Online
       }
     }
-    
+
     await member.roles.remove(role);
   }
 }

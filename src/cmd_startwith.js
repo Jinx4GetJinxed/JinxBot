@@ -1,8 +1,8 @@
-function Gold(message) {        
+function Gold(message) {
     message.react("<a:Gold:776099501051871242>");
 }
 
-function Hello(message){
+function Hello(message) {
     message.reply('tqt pas je suis là');
 }
 

@@ -1,122 +1,220 @@
-require('dotenv').config();
+import { } from "dotenv/config"
+import { Client, Intents, Collection } from "discord.js"
+import { Gold, Hello } from './cmd_startwith.js'
+import { kick_id, ban_id } from "./moderator_function.js"
+import { bio, status } from "./statut.js";
+import { Consignes1, Consignes2, Consignes3, Consignes4, Consignes5 } from './consignes_function.js';
+import { partialMessage, roleAdd, roleRemove, msgAddReaction, msgRemoveReaction } from "./function_roles.js";
+import { DisTube } from "distube"
+import { SpotifyPlugin } from "@distube/spotify"
+import { SoundCloudPlugin } from "@distube/soundcloud";
+import { randomColor } from "./random_color.js"
 
-import { Client, Intents, MessageEmbed, MessageAttachment } from 'discord.js';
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
-const attachement = new MessageAttachment('./chaumiere.gif', 'chaumiere.gif');
-const PREFIX = "Jinx "
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const config = require("./config.json")
 
+const fs = require('fs')
+const client = new Client({
+    intents: [
+        Intents.FLAGS.GUILDS,
+        Intents.FLAGS.GUILD_MESSAGES,
+        Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+        Intents.FLAGS.GUILD_VOICE_STATES
+    ],
+    partials: ["MESSAGE", "CHANNEL", "REACTION"]
+});
+const PREFIX = "Jinx!";
 
-process.traceDeprecation = true;
+client.distube = new DisTube(client, {
+    emitNewSongOnly: true,
+    plugins: [new SpotifyPlugin(), new SoundCloudPlugin()]
+})
+client.commands = new Collection()
+client.aliases = new Collection()
+client.emotes = config.emoji;
+client.commands = new Collection();
 
-process.on('warning', (warning) => {
-    console.log(warning.stack);
+fs.readdir("./src/commands/", (err, files) => {
+    if (err) return console.log("Could not find any commands!")
+    const jsFiles = files.filter(f => f.split(".").pop() === "js")
+    if (jsFiles.length <= 0) return console.log("Could not find any commands!")
+    jsFiles.forEach(file => {
+        const cmd = require(`./commands/${file}`)
+        console.log(`Loaded ${file}`)
+        client.commands.set(cmd.name, cmd)
+        if (cmd.aliases) cmd.aliases.forEach(alias => client.aliases.set(alias, cmd.name))
+    })
+})
+
+client.on("ready", () => {
+    setInterval(() => {
+        var Description_Status = bio();
+        client.user.setActivity(Description_Status.message, {
+            type: Description_Status.type
+        });
+    }, 10000);
+
+    setInterval(() => {
+        var type_status = status();
+        client.user.setStatus(type_status);
+    }, 15000);
+
+    console.log(`le bot ${client.user.tag} est connecté`);
 });
 
-
-client.on('messageCreate', async (message) => {
+client.on("messageCreate", async message => {
     if (message.author.bot) return;
 
+    const [CMD_NAME, ...args] = message.content
+        .trim()
+        .substring(PREFIX.length)
+        .split(/\s+/);
+
     if (message.content.startsWith(PREFIX)) {
-        const [CMD_NAME, ...args] = message.content
-            .trim()
-            .substring(PREFIX.length).
-            split(/\s+/);
-        /*console.log(CMD_NAME);
-        console.log(args);*/
-
-        if (CMD_NAME === 'dégage-moi') {
-            if (!message.member.permissions.has('KICK_MEMBERS'))
-                return message.reply('tu ne peux pas utiliser cette commande ptit branleur');
-
-            if (args.length === 0)
-                return message.reply('il manque l\'identifiant');
-
-            const member = message.guild.members.cache.get(args[0]);
-            if (member) {
-                member.kick()
-                    .then((member) => message.channel.send(`${member}, t'es expulsé et ouais frérot`))
-                    .catch((err) => message.channel.send('tu ne m\' as pas donné la permission :('));
-            } else {
-                message.channel.send('je ne l\'ai pas trouvé ce fdp')
-            }
-
-        } else if (CMD_NAME === 'ban-moi') {
-            if (!message.member.permissions.has('BAN_MEMBERS'))
-                return message.reply('tu ne peux pas utiliser cette commande sale étron');
-
-            if (args.length === 0)
-                return message.reply('il manque l\'identifiant');
-
-            const user = await message.guild.members.ban(args[0]);
-            if (user) {
-                user.then((member) => message.channel.send(`${member}, t'es banni et ouais frérot`))
-                    .catch((err) => message.channel.send('tu ne m\' as pas donné la permission :('));
-            } else {
-                message.channel.send('je ne l\'ai pas trouvé ce fdp')
-            }
+        /** Fonction pour kick */
+        if (CMD_NAME === "dégage-moi") {
+            kick_id(message, args);
+        } else if (CMD_NAME === "ban-moi") {
+            ban_id(message, args);
         }
 
-        if (CMD_NAME === 'consignes') {
-            const Consignes1 = new MessageEmbed()
-                .setColor('#33e9ff')
-                .setTitle('<a:QuestionMarkGuy:751206439812464722> 𝙻𝙴𝚂 𝚁𝙴𝙶𝙻𝙴𝚂 𝙳𝙴 𝙻𝙰 𝙲𝙷𝙰𝚄𝙼𝙸𝙴𝚁𝙴 <a:QuestionMarkGuy:751206439812464722>')
-                .setAuthor("Le bot a été créé par Hakim Id Brahim", message.author.displayAvatarURL(), 'https://www.instagram.com/hakim_id_brahim/?hl=fr')
-                .setURL()
-                .attachement(attachement)
-                .setDescription('\u200B\nVoici les règles à respecter sur 🎮 𝙻𝙰 𝙲𝙷𝙰𝚄𝙼𝙸𝙴𝚁𝙴 👽 :')
-                .setThumbnail(message.guild.iconURL())
-                .addFields(
-                    {
-                        name: '\u200B\n\u200B\n𝙱𝚘𝚗𝚗𝚎 𝚎𝚗𝚝𝚎𝚗𝚝𝚎 :\u200B\n',
-                        value: "\u200B\n```diff\n- ⚠️ Écrire dans les salons appropriés ⚠️.\n\n- ⚠️ Interdiction de spam ⚠️.\n\n- ⚠️ Les conflits entre les membres seront vite terminés par des mutes ⚠️.\n\n- ⚠️ Tout harcèlement par message privé reporté par un membre est aussitôt sanctionné par un ban ⚠️.```"
-                    },
-
-                    {
-                        name: '\u200B\n\u200B\n𝙻𝚎𝚜 𝚛𝚘𝚕𝚎𝚜 𝚙𝚊𝚛 𝚗𝚒𝚟𝚎𝚊𝚞𝚡 :\u200B\n',
-                        value: `\u200B\nComment avoir des rôles?
-                            \u200B\n- En étant tout simplement actif sur le serveur (écrire des messages dans les salons, partager du contenu, venir en vocal.` },
-
-                    {
-                        name: '\u200B\n\u200B\n𝚅𝚘𝚒𝚌𝚒 𝚞𝚗𝚎 𝚕𝚒𝚜𝚝𝚎 𝚍𝚎𝚜 𝚛𝚘𝚕𝚎𝚜 :\u200B\n',
-                        value: `\u200B\n ░░▒▓█◦•◦>  Niveau de départ: <@&831797926007144478>
-                            \u200B\n ░░▒▓█◦•◦>  Niveau 1 : <@&831798215916519434>
-                            \u200B\n ░░▒▓█◦•◦>  Niveau 2 : <@&831798217322397716>
-                            \u200B\n ░░▒▓█◦•◦>  Niveau 5 : <@&831798219230281728> 
-                            \u200B\n ░░▒▓█◦•◦>  Niveau 10 : <@&831798220823724033> 
-                            \u200B\n ░░▒▓█◦•◦>  Niveau 15 : <@&840765286403407884>
-                            \u200B\n ░░▒▓█◦•◦>  Niveau 20 : <@&831798672211574865> 
-                            \u200B\n **░░▒▓█◦•◦> Et une fois que le niveau 30 est atteint tu es direct promu <@&831803492028645386>  !**`},
-
-                    {
-                        name: '\u200B\n\u200B\n𝚅𝚘𝚒𝚌𝚒 𝚚𝚞𝚎𝚕𝚚𝚞𝚎𝚜 𝚌𝚘𝚗𝚜𝚎𝚒𝚕𝚜 :\u200B\n',
-                        value: `\u200B\n - Pour voir la progression de ton level c'est soit ***/lvl*** (pour voir son propre niveau) ou soit ***/classement*** (pour voir le niveau de tout le monde).
-                            \u200B\n - Pour obtenir une listes des commandes sur le serveur écrivez ***Jinx help*** dans le tchat.
-                            \u200B\n - De plus si tu nous communiques ton anniversaire par message tu pourras recevoir le rôle <@&814456055986782208> et tu seras tout en haut de la liste des membres ce jour-là.`},
-                    {
-                        name: `\u200B\n ***Plus on est fou, plus on rit !!!***`,
-                        value: `\u200B\n ***- Sois un maximum actif <a:GetNaeNae:751206487631593552> et n'hésite pas à inviter tous tes potes !***
-                            \u200B\n ***- N'oublie pas de passer par la case <#534095413662449675> pour que l'on se connaisse un petit peu mieux.***
-                            \u200B\n ***- Le but de ce serveur est que tout le monde s'y sente bien. Alors, en cas de problème, contacte moi.***
-                            \u200B\n  <a:Dancing:784970376831696897> **Bon amusement l'élite !!! **<a:PartyCat:751206416760569876>`},
-                )
-                .setImage()
-                .setFooter('Tous droits réservés, Jinx Bot©2021 - Id Brahim Hakim • Envoyé le 30 août 2077');
-
-            message.channel.send({ embeds: [Consignes1] });
+        /** Fonction pour afficher les consignes */
+        if (CMD_NAME === "consignes") {
+            setTimeout(() => message.delete(), 1000);
+            if (message.member.permissions.has("ADMINISTRATOR")) {
+                if (message.channel.id === "481477520236216350") {
+                    Consignes1(message);
+                    Consignes2(message);
+                    Consignes3(message);
+                    Consignes4(message)
+                    Consignes5(message)
+                } else {
+                    message.reply("**Tu dois utiliser la commande dans le channel approprié !** ***FDP***").then(msg => { setTimeout(() => msg.delete(), 5000) })
+                }
+            } else {
+                message.reply("**Tu n'as pas le droit d'utiliser cette commande !** ***BG***").then(msg => { setTimeout(() => msg.delete(), 5000) });
+            }
         }
     }
 
-    if (message.content.toLowerCase().includes('gold')) {
-        message.react("<a:Gold:776099501051871242>");
+    if (message.content.startsWith(config.prefix)) {
+        setTimeout(() => message.delete(), 1000);
+        if (message.channel.id === "474553482691608597") {
+            const prefix2 = config.prefix
+            if (!message.content.startsWith(prefix2)) return;
+            const Args = message.content.slice(prefix2.length).trim().split(/ +/g)
+            const command = Args.shift().toLowerCase()
+            const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command))
+            if (!cmd) return message.reply("**Certes tu demandes mes services, mais je dois faire quoi ?**").then(msg => { setTimeout(() => msg.delete(), 5000) })
+            if (cmd.inVoiceChannel && !message.member.voice.channel) return message.channel.send(`**${client.emotes.error} | Tu dois être dans un canal vocal chacal!**`)
+            try {
+                cmd.run(client, message, Args)
+            } catch (e) {
+                console.error(e)
+                message.reply(`Erreur: ${e}`)
+            }
+        } else {
+            message.reply("**Tu dois utiliser les commandes de musique dans le channel <#474553482691608597> !**").then(msg => { setTimeout(() => msg.delete(), 5000) })
+        }
     }
 
-    if (message.content.toLowerCase().includes('hello')) {
-        message.reply('tqt pas je suis là');
+    if (message.content.toLowerCase().includes("gold")) {
+        Gold(message);
+    }
+
+    if (message.content.toLowerCase().includes("hello")) {
+        Hello(message);
     }
 });
 
+client.on("messageReactionAdd", async (reaction, user) => {
+    partialMessage(reaction);
+    msgAddReaction(reaction);
+    if (reaction.message.channel.id === "481477520236216350") {
+        roleAdd(reaction, user);
+    }
+});
 
-
-
+client.on("messageReactionRemove", async (reaction, user) => {
+    partialMessage(reaction);
+    msgRemoveReaction(reaction);
+    if (reaction.message.channel.id === "481477520236216350") {
+        roleRemove(reaction, user);
+    }
+});
+const statut = queue => `Volume: \`${queue.volume}%\` | Filtre: \`${queue.filters.join(", ") || "Non"}\` | Boucle: \`${queue.repeatMode ? queue.repeatMode === 2 ? "Toute la file d'attente" : "Cette Musique" : "Non"}\` | Autoplay: \`${queue.autoplay ? "On" : "Off"}\``
+client.distube
+    .on("playSong", (queue, song) => queue.textChannel.send({
+        embeds: [{
+            color: randomColor(),
+            description: `\`\`\`xl\n${client.emotes.play} | 'Lecture:'\`\`\` \`${song.name}\` - \`${song.formattedDuration}\``
+        }]
+    })
+    )
+    .on("addSong", (queue, song) => queue.textChannel.send({
+        embeds: [{
+            color: randomColor(),
+            description: `\`\`\`xl\n${client.emotes.success} | 'Ajout de la musique:'\`\`\` \`${song.name}\` - \`${song.formattedDuration}\` à la file d'attente par ${song.user}\n${statut(queue)}`
+        }]
+    })
+    )
+    .on("addList", (queue, playlist) => queue.textChannel.send({
+        embeds: [{
+            color: randomColor(),
+            description: `\`\`\`xl\n${client.emotes.success} | 'Ajout de la playlist:'\`\`\` \`${playlist.name}\` (${playlist.songs.length} musiques) à la file d'attente\n${statut(queue)}`
+        }]
+    })
+    )
+    // DisTubeOptions.searchSongs = true
+    .on("searchResult", (message, result) => {
+        let i = 0
+        message.channel.send({
+            embeds: [{
+                color: randomColor(),
+                description: `\`\`\`xl\n'Choisissez une option parmi les suivantes'\`\`\`\n${result.map(song => `**${++i}**. ${song.name} - \`${song.formattedDuration}\``).join("\n")}\`\`\`xl\n'Entrez autre chose ou attendez 60 secondes pour annuler'\`\`\``
+            }]
+        })
+    }
+    )
+    // DisTubeOptions.searchSongs = true
+    .on("searchCancel", message => message.channel.send({
+        embeds: [{
+            color: randomColor(),
+            description: `\`\`\`xl\n${client.emotes.error} | Searching canceled\`\`\``
+        }]
+    })
+    )
+    .on("error", (channel, e) => {
+        channel.send({
+            embeds: [{
+                color: randomColor(),
+                description: `\`\`\`xl\n${client.emotes.error} | 'Une erreur a été rencontrée:' ${e}\`\`\``
+            }]
+        })
+        console.error(e)
+    }
+    )
+    .on("empty", channel => channel.send({
+        embeds: [{
+            color: randomColor(),
+            description: `\`\`\`xl\nLe canal vocal est vide ! Je quitte le canal...\`\`\``
+        }]
+    })
+    )
+    .on("searchNoResult", message => message.channel.send({
+        embeds: [{
+            color: randomColor(),
+            description: `\`\`\`xl\n${client.emotes.error} | Aucun résultat trouvé !\`\`\``
+        }]
+    })
+    )
+    .on("finish", queue => queue.textChannel.send({
+        embeds: [{
+            color: randomColor(),
+            description: `\`\`\`xl\n'Terminé!'\`\`\``
+        }]
+    })
+    )
 
 client.login(process.env.DISCORDJS_BOT_TOKEN);

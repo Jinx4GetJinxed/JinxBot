@@ -1,10 +1,10 @@
 {
-    "prefix": "Powder!",
+    "prefix": "powder!",
     "emoji": {
         "play": "▶️",
         "stop": "⏹️",
-        "queue": "📄",
-        "success": "☑️",
+        "queue": "🧾",
+        "success": "✔️",
         "repeat": "🔁",
         "error": "❌"
     }
