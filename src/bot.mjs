@@ -21,6 +21,7 @@ const client = new Client({
         Intents.FLAGS.GUILD_MESSAGES,
         Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
         Intents.FLAGS.GUILD_VOICE_STATES,
+        Intents.FLAGS.GUILD_MEMBERS,
         Intents.FLAGS.GUILD_PRESENCES
     ],
     partials: ["MESSAGE", "CHANNEL", "REACTION"]
@@ -64,13 +65,17 @@ client.on("ready", () => {
     console.log(`le bot ${client.user.tag} est connecté`);
 });
 
-client.on('guildMemberAdd', member => {
-    member.guild.channels.get('456861351835336716').send('**' + member.user.username + '**, has joined the server!'); 
+client.on("guildMemberAdd", async member => {
+    member.guild.channels.cache.get('456861351835336716').send(msg => msg.send({
+        embed: [{
+            color: randomColor(),
+            title: `\`\`\`xl\n\`${member.user.username}\`,'Bienvenu, mon serf, sur' ${member.guild.name}\`\`\``
+        }]
+    }));
 });
 
-client.on('guildMemberRemove', member => {
-    member.guild.channels.get('456861351835336716').send('**' + member.user.username + '**, has left the server');
-    //
+client.on('guildMemberRemove', async member => {
+    member.guild.channels.cache.get('456861351835336716').send('**' + member.user.username + '**, has left the server');
 });
 
 client.on("messageCreate", async message => {
@@ -82,17 +87,19 @@ client.on("messageCreate", async message => {
         .split(/\s+/);
 
     if (message.content.startsWith(PREFIX)) {
-        /** Fonction pour kick */
-        if (CMD_NAME === "dégage-moi") {
-            kick_id(message, args);
-        } else if (CMD_NAME === "ban-moi") {
-            ban_id(message, args);
-        }
+        if (message.member.permissions.has("ADMINISTRATOR")) {
+            /** Fonction pour kick */
+            if (CMD_NAME === "dégage-moi") {
+                setTimeout(() => message.delete(), 15000);
+                kick_id(message, args);
+            } else if (CMD_NAME === "ban-moi") {
+                setTimeout(() => message.delete(), 15000);
+                ban_id(message, args);
+            }
 
-        /** Fonction pour afficher les consignes */
-        if (CMD_NAME === "consignes") {
-            setTimeout(() => message.delete(), 1000);
-            if (message.member.permissions.has("ADMINISTRATOR")) {
+            /** Fonction pour afficher les consignes */
+            if (CMD_NAME === "consignes") {
+                setTimeout(() => message.delete(), 1000);
                 if (message.channel.id === "481477520236216350") {
                     Consignes1(message);
                     Consignes2(message);
@@ -102,11 +109,12 @@ client.on("messageCreate", async message => {
                 } else {
                     message.reply("**Tu dois utiliser la commande dans le channel approprié !** ***FDP***").then(msg => { setTimeout(() => msg.delete(), 5000) })
                 }
-            } else {
-                message.reply("**Tu n'as pas le droit d'utiliser cette commande !** ***BG***").then(msg => { setTimeout(() => msg.delete(), 5000) });
             }
+        } else {
+            message.reply("**Tu n'as pas le droit d'utiliser cette commande !** ***BG***").then(msg => { setTimeout(() => msg.delete(), 5000) });
         }
     }
+
 
     if (message.content.toLowerCase().startsWith(config.prefix)) {
         setTimeout(() => message.delete(), 1000);
