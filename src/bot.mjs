@@ -1,5 +1,5 @@
 import { } from "dotenv/config"
-import { Client, Intents, Collection } from "discord.js"
+import { Client, Intents, Collection, MessageEmbed } from "discord.js"
 import { Gold, Hello } from './cmd_startwith.js'
 import { kick_id, ban_id } from "./moderator_function.js"
 import { bio, status } from "./statut.js";
@@ -20,7 +20,8 @@ const client = new Client({
         Intents.FLAGS.GUILDS,
         Intents.FLAGS.GUILD_MESSAGES,
         Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-        Intents.FLAGS.GUILD_VOICE_STATES
+        Intents.FLAGS.GUILD_VOICE_STATES,
+        Intents.FLAGS.GUILD_PRESENCES
     ],
     partials: ["MESSAGE", "CHANNEL", "REACTION"]
 });
@@ -61,6 +62,15 @@ client.on("ready", () => {
     }, 15000);
 
     console.log(`le bot ${client.user.tag} est connecté`);
+});
+
+client.on('guildMemberAdd', member => {
+    member.guild.channels.get('456861351835336716').send('**' + member.user.username + '**, has joined the server!'); 
+});
+
+client.on('guildMemberRemove', member => {
+    member.guild.channels.get('456861351835336716').send('**' + member.user.username + '**, has left the server');
+    //
 });
 
 client.on("messageCreate", async message => {
