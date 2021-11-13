@@ -66,16 +66,31 @@ client.on("ready", () => {
 });
 
 client.on("guildMemberAdd", async member => {
-    member.guild.channels.cache.get('456861351835336716').send(msg => msg.send({
-        embed: [{
-            color: randomColor(),
-            title: `\`\`\`xl\n\`${member.user.username}\`,'Bienvenu, mon serf, sur' ${member.guild.name}\`\`\``
-        }]
-    }));
+    const Welcome = member.guild.channels.cache.get('456861351835336716')
+
+    const embed = new MessageEmbed()
+    .setColor(randomColor())
+    .setAuthor("\\✧\\ 𝙹𝚒𝚗𝚡 /✧/ te souhaite aussi la bienvenue", client.user.avatarURL({ dynamic: true}))
+    .setTitle(`\`${member.user.tag}\`, tu fais désormais parti(e) de \`${member.guild.name}\``)
+    .setDescription(`\`\`\`xl\n'Si tu veux avoir accès à tous les channels:'\`\`\`<a:Dancing:784970376831696897> <#481477520236216350> <a:Dancing:784970376831696897>
+    
+                    \`\`\`xl\n'Bon amusement sur ` + member.guild.name + ` !!!'\`\`\``)
+    .setImage(member.user.avatarURL({ dynamic: true, size: 256}))
+    .setFooter("Nous sommes actuellement " + Number(member.guild.memberCount - 5) + " membres !!!")
+
+    Welcome.send({ embeds: [embed] })
 });
 
 client.on('guildMemberRemove', async member => {
-    member.guild.channels.cache.get('456861351835336716').send('**' + member.user.username + '**, has left the server');
+    const Welcome = member.guild.channels.cache.get('456861351835336716')
+
+    const embed = new MessageEmbed()
+    .setColor(randomColor())
+    .setAuthor("Ooh non, un(e) membre est parti(e) de " + member.guild.name , member.user.avatarURL({ dynamic: true, size: 256}))
+    .setDescription(`\`${member.user.tag}\` s'en est allé(e)... <:SadRisitas:763123680439304223>`)
+    .setFooter("Nous sommes actuellement " + Number(member.guild.memberCount - 5) + " membres !!!")
+
+    Welcome.send({ embeds: [embed] })
 });
 
 client.on("messageCreate", async message => {
