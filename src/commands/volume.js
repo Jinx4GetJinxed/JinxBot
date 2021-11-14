@@ -1,4 +1,5 @@
-const { randomColor } = require("../random_color")
+const { randomColor } = require("../fonctions/random_color")
+
 module.exports = {
     name: "volume",
     aliases: ["v", "set", "set-volume"],

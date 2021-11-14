@@ -1,14 +1,14 @@
 import { } from "dotenv/config"
 import { Client, Intents, Collection, MessageEmbed } from "discord.js"
-import { Gold, Hello } from './cmd_startwith.js'
-import { kick_id, ban_id } from "./moderator_function.js"
-import { bio, status } from "./statut.js";
-import { Consignes1, Consignes2, Consignes3, Consignes4, Consignes5 } from './consignes_function.js';
-import { partialMessage, roleAdd, roleRemove, msgAddReaction, msgRemoveReaction } from "./function_roles.js";
+import { Gold, Hello } from './fonctions/cmd_startwith.js'
+import { kick_id, ban_id } from "./fonctions/moderator_function.js"
+import { bio, status } from "./fonctions/statut.js";
+import { Consignes1, Consignes2, Consignes3, Consignes4, Consignes5 } from './fonctions/consignes_function.js';
+import { partialMessage, roleAdd, roleRemove, msgAddReaction, msgRemoveReaction } from "./fonctions/function_roles.js";
 import { DisTube } from "distube"
 import { SpotifyPlugin } from "@distube/spotify"
 import { SoundCloudPlugin } from "@distube/soundcloud";
-import { randomColor } from "./random_color.js"
+import { randomColor } from "./fonctions/random_color.js"
 
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);

@@ -1,4 +1,5 @@
-const { randomColor } = require("../random_color")
+const { randomColor } = require("../fonctions/random_color")
+
 module.exports = {
     name: "previous",
     inVoiceChannel: true,
