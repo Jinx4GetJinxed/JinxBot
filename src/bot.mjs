@@ -9,6 +9,7 @@ import { DisTube } from "distube"
 import { SpotifyPlugin } from "@distube/spotify"
 import { SoundCloudPlugin } from "@distube/soundcloud";
 import { randomColor } from "./fonctions/random_color.js"
+import { preparation_table } from './level/tables.js'
 
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
@@ -63,6 +64,7 @@ client.on("ready", () => {
     }, 15000);
 
     console.log(`le bot ${client.user.tag} est connecté`);
+    preparation_table()
 });
 
 client.on("guildMemberAdd", async member => {
