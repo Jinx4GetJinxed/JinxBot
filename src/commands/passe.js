@@ -2,6 +2,7 @@ const { randomColor } = require("../fonctions/random_color")
 
 module.exports = {
     name: "skip",
+    aliases: ["skip","s"],
     inVoiceChannel: true,
     run: async (client, message, args) => {
         const queue = client.distube.getQueue(message)

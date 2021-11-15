@@ -19,7 +19,6 @@
     "@discordjs/voice": "^0.7.2",
     "@distube/soundcloud": "^1.0.0",
     "@distube/spotify": "^1.0.0",
-    "ansi-regex": ">=5.0.1",
     "better-sqlite3": "^7.4.4",
     "discord.js": "^13.2.0",
     "distube": "^3.0.1",
@@ -30,6 +29,7 @@
     "node-gyp": "^8.4.0",
     "node-opus": "^0.3.3",
     "nodemon": "^2.0.14",
+    "opusscript": "^0.0.8",
     "request": "^2.88.2",
     "sqlite3": "^4.2.0",
     "tar": "^6.1.11"

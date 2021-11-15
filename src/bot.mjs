@@ -1,7 +1,13 @@
 import {} from "dotenv/config";
 import { Client, Intents, Collection, MessageEmbed } from "discord.js";
 import { Gold, Hello } from "./fonctions/cmd_startwith.js";
-import { kick_id, ban_id } from "./fonctions/moderator_function.js";
+import {
+  kick_id,
+  ban_id,
+  no_cmd,
+  not_allowed_cmd,
+  cmd_no_channel,
+} from "./fonctions/moderator_function.js";
 import { bio, status } from "./fonctions/statut.js";
 import {
   Consignes1,
@@ -20,8 +26,18 @@ import {
 import { DisTube } from "distube";
 import { SpotifyPlugin } from "@distube/spotify";
 import { SoundCloudPlugin } from "@distube/soundcloud";
-import { randomColor } from "./fonctions/random_color.js";
 import { createRequire } from "module";
+import {
+  table_prep,
+  create_table,
+  getScore_fct,
+  setScore_fct,
+} from "./level/tables.js";
+import { add_membre } from "./fonctions/ajout_membre.js";
+import { supp_membre } from "./fonctions/supp_membre.js";
+import { score_add, score_give, show_level, top_rank } from "./level/score.js";
+import { run_command } from "./fonctions/lecture_commands.js";
+import { message_distube } from "./message_distube.js/main_message.js";
 
 const require = createRequire(import.meta.url);
 const config = require("./config.json");
@@ -57,7 +73,7 @@ fs.readdir("./src/commands/", (err, files) => {
   if (jsFiles.length <= 0) return console.log("Could not find any commands!");
   jsFiles.forEach((file) => {
     const cmd = require(`./commands/${file}`);
-    console.log(`Loaded ${file}`);
+    console.log(`chargé ${file}`);
     client.commands.set(cmd.name, cmd);
     if (cmd.aliases)
       cmd.aliases.forEach((alias) => client.aliases.set(alias, cmd.name));
@@ -78,371 +94,112 @@ client.on("ready", () => {
   }, 15000);
 
   console.log(`le bot ${client.user.tag} est connecté`);
-  const table = sql
-    .prepare(
-      "SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'scores';"
-    )
-    .get();
+  const table = table_prep();
   if (!table["count(*)"]) {
-    // If the table isn't there, create it and setup the database correctly.
-    sql
-      .prepare(
-        "CREATE TABLE scores (id TEXT PRIMARY KEY, user TEXT, guild TEXT, points INTEGER, level INTEGER);"
-      )
-      .run();
-    // Ensure that the "id" row is always unique and indexed.
-    sql.prepare("CREATE UNIQUE INDEX idx_scores_id ON scores (id);").run();
-    sql.pragma("synchronous = 1");
-    sql.pragma("journal_mode = wal");
+    create_table();
   }
-
   // And then we have two prepared statements to get and set the score data.
-  client.getScore = sql.prepare(
-    "SELECT * FROM scores WHERE user = ? AND guild = ?"
-  );
-  client.setScore = sql.prepare(
-    "INSERT OR REPLACE INTO scores (id, user, guild, points, level) VALUES (@id, @user, @guild, @points, @level);"
-  );
+  client.getScore = getScore_fct();
+  client.setScore = setScore_fct();
 });
 
 client.on("guildMemberAdd", async (member) => {
-  const Welcome = member.guild.channels.cache.get("456861351835336716");
-
-  const embed = new MessageEmbed()
-    .setColor(randomColor())
-    .setAuthor(
-      "\\✧\\ 𝙹𝚒𝚗𝚡 /✧/ te souhaite aussi la bienvenue",
-      client.user.avatarURL({ dynamic: true })
-    )
-    .setTitle(
-      `\`${member.user.tag}\`, tu fais désormais parti(e) de \`${member.guild.name}\``
-    )
-    .setDescription(
-      `\`\`\`xl\n'Si tu veux avoir accès à tous les channels:'\`\`\`<a:Dancing:784970376831696897> <#481477520236216350> <a:Dancing:784970376831696897>
-    
-                    \`\`\`xl\n'Bon amusement sur ` +
-        member.guild.name +
-        ` !!!'\`\`\``
-    )
-    .setImage(member.user.avatarURL({ dynamic: true, size: 256 }))
-    .setFooter(
-      "Nous sommes actuellement " +
-        Number(member.guild.memberCount - 5) +
-        " membres !!!"
-    );
-
-  Welcome.send({ embeds: [embed] });
+  add_membre(member, client);
 });
 
 client.on("guildMemberRemove", async (member) => {
-  const Welcome = member.guild.channels.cache.get("456861351835336716");
-
-  const embed = new MessageEmbed()
-    .setColor(randomColor())
-    .setAuthor(
-      "Ooh non, un(e) membre est parti(e) de " + member.guild.name,
-      member.user.avatarURL({ dynamic: true, size: 256 })
-    )
-    .setDescription(
-      `\`${member.user.tag}\` s'en est allé(e)... <:SadRisitas:763123680439304223>`
-    )
-    .setFooter(
-      "Nous sommes actuellement " +
-        Number(member.guild.memberCount - 5) +
-        " membres !!!"
-    );
-
-  Welcome.send({ embeds: [embed] });
+  supp_membre(member, client);
 });
 
 client.on("messageCreate", async (message) => {
-  if (message.author.bot) return;
-
-  if (message.guild) {
-    let score = client.getScore.get(message.author.id, message.guild.id);
-
-    if (!score) {
-      score = {
-        id: `${message.guild.id}-${message.author.id}`,
-        user: message.author.id,
-        guild: message.guild.id,
-        points: 0,
-        level: 0,
-      };
-    }
-
-    // Increment the score
-    score.points++;
-
-    // Calculate the current level through MATH OMG HALP.
-    const curLevel = Math.floor(0.1 * Math.sqrt(score.points));
-
-    // Check if the user has leveled up, and let them know if they have:
-    if (score.level < curLevel) {
-      // Level up!
-      score.level++;
-      switch (score.level) {
-        case 1:
-          message.author.roles.add(config.role.beginner);
-          break;
-
-        case 2:
-          await message.author.roles.remove(config.role.beginner);
-          message.author.roles.add(config.role.amateur);
-          break;
-
-        case 5:
-          message.author.roles.remove(config.role.amateur);
-          message.author.roles.add(config.role.skilled);
-          break;
-
-        case 10:
-          message.author.roles.remove(config.role.skilled);
-          message.author.roles.add(config.role.conqueror);
-          break;
-
-        case 15:
-          message.author.roles.remove(config.role.conqueror);
-          message.author.roles.add(config.role.marechal);
-          break;
-
-        case 20:
-          message.author.roles.remove(config.role.marechal);
-          message.author.roles.add(config.role.emperor);
-          break;
-
-        case 30:
-          message.author.roles.remove(config.role.emperor);
-          message.author.roles.add(config.role.ketaminator);
-          break;
-      }
-      message.reply(
-        `\`\`\`xl\n'Tu as atteint le niveau \`**${curLevel}**\` ! N'oublie pas de dab !'\`\`\``
-      );
-    }
-
-    client.setScore.run(score);
-  }
-
   const [CMD_NAME, ...args] = message.content
     .trim()
     .substring(PREFIX.length)
     .split(/\s+/);
 
-  // You can modify the code below to remove points from the mentioned user as well!
-  if (CMD_NAME === "give") {
-    // Limited to guild owner - adjust to your own preference!
-    if (!message.author.id === message.guild.ownerId)
-      return message.reply("You're not the boss of me, you can't do that!");
+  switch (true) {
+    case message.author.bot:
+      return;
+      break;
 
-    const user =
-      message.mentions.users.first() || client.users.cache.get(args[0]);
-    if (!user)
-      return message.reply("You must mention someone or give their ID!");
+    case message.guild:
+      score_add(client.getScore, client.setScore, message);
+      break;
 
-    const pointsToAdd = parseInt(args[1], 10);
-    if (!pointsToAdd)
-      return message.reply("You didn't tell me how many points to give...");
-
-    // Get their current points.
-    let userScore = client.getScore.get(user.id, message.guild.id);
-
-    // It's possible to give points to a user we haven't seen, so we need to initiate defaults here too!
-    if (!userScore) {
-      userScore = {
-        id: `${message.guild.id}-${user.id}`,
-        user: user.id,
-        guild: message.guild.id,
-        points: 0,
-        level: 1,
-      };
-    }
-    userScore.points += pointsToAdd;
-
-    // We also want to update their level (but we won't notify them if it changes)
-    let userLevel = Math.floor(0.1 * Math.sqrt(score.points));
-    userScore.level = userLevel;
-
-    // And we save it!
-    client.setScore.run(userScore);
-
-    return message.channel.send(
-      `${user.tag} has received ${pointsToAdd} points and now stands at ${userScore.points} points.`
-    );
-  }
-
-  if (CMD_NAME === "rank") {
-    if (message.channel.id === "833824151671930920") {
-      const top10 = sql
-        .prepare(
-          "SELECT * FROM scores WHERE guild = ? ORDER BY points DESC LIMIT 10;"
-        )
-        .all(message.guild.id);
-
-      // Now shake it and show it! (as a nice embed, too!)
-      const embed = new MessageEmbed()
-        .setTitle("TOP 10 DU SERVEUR")
-        .setAuthor(client.user.username, client.user.avatarURL())
-        .setColor(randomColor());
-
-      for (const data of top10) {
-        embed.addFields({
-          name: client.users.cache.get(data.user).tag,
-          value: `${data.points} points d'expérience (niveau ${data.level})`,
-        });
-      }
-      return message.channel.send({ embeds: [embed] });
-    } else {
-      message
-        .reply({
-          embeds: [
-            {
-              color: randomColor(),
-              description: `${client.emotes.error} | Tu dois utiliser cette commande dans le channel <#474553482691608597> !`,
-            },
-          ],
-        })
-        .then((msg) => {
-          setTimeout(() => msg.delete(), 10000);
-        });
-    }
-  }
-
-  if (message.content.startsWith(PREFIX)) {
-    setTimeout(() => message.delete(), 1000);
-    switch (CMD_NAME) {
-      case "dégage-moi":
-        if (message.member.permissions.has("ADMINISTRATOR")) {
-          kick_id(message, args);
-        } else {
-          message
-            .reply(
-              "**Tu n'as pas le droit d'utiliser cette commande !** ***BG***"
-            )
-            .then((msg) => {
-              setTimeout(() => msg.delete(), 5000);
-            });
-        }
-        break;
-
-      case "ban-moi":
-        if (message.member.permissions.has("ADMINISTRATOR")) {
-          ban_id(message, args);
-        } else {
-          message
-            .reply(
-              "**Tu n'as pas le droit d'utiliser cette commande !** ***BG***"
-            )
-            .then((msg) => {
-              setTimeout(() => msg.delete(), 5000);
-            });
-        }
-        break;
-
-      case "consignes":
-        if (message.member.permissions.has("ADMINISTRATOR")) {
-          setTimeout(() => message.delete(), 1000);
-          if (message.channel.id === "481477520236216350") {
-            Consignes1(message);
-            Consignes2(message);
-            Consignes3(message);
-            Consignes4(message);
-            Consignes5(message);
+    case message.content.startsWith(PREFIX):
+      setTimeout(() => message.delete(), 1000);
+      switch (CMD_NAME) {
+        case "consignes":
+          if (message.member.permissions.has("ADMINISTRATOR")) {
+            if (message.channel.id === "481477520236216350") {
+              Consignes1(message);
+              Consignes2(message);
+              Consignes3(message);
+              Consignes4(message);
+              Consignes5(message);
+            }
           } else {
-            message
-              .reply(
-                "**Tu dois utiliser la commande dans le channel approprié !** ***FDP***"
-              )
-              .then((msg) => {
-                setTimeout(() => msg.delete(), 5000);
-              });
+            not_allowed_cmd(message, client.emotes.error);
           }
-        } else {
-          message
-            .reply(
-              "**Tu n'as pas le droit d'utiliser cette commande !** ***BG***"
-            )
-            .then((msg) => {
-              setTimeout(() => msg.delete(), 5000);
-            });
-        }
-        break;
-      case "levels":
-        let score = client.getScore.get(message.author.id, message.guild.id);
-        message
-          .reply(
-            `Tu as actuellement ${score.points} points d'expérience et tu es niveau ${score.level}!`
-          )
-          .then((msg) => {
-            setTimeout(() => msg.delete(), 5000);
-          });
-        break;
-    }
-  }
+          break;
 
-  if (message.content.toLowerCase().startsWith(config.prefix)) {
-    setTimeout(() => message.delete(), 1000);
-    if (message.channel.id === "474553482691608597") {
-      const prefix1 = config.prefix;
-      const Args = message.content.slice(prefix1.length).trim().split(/ +/g);
-      const command = Args.shift().toLowerCase();
-      const cmd =
-        client.commands.get(command) ||
-        client.commands.get(client.aliases.get(command));
-      if (!cmd)
-        return message
-          .reply({
-            embeds: [
-              {
-                color: randomColor(),
-                description: `\`\`\`py\n"Certes tu demandes mes services, mais tu me demandes une commande qui n'existe pas"\`\`\``,
-              },
-            ],
-          })
-          .then((msg) => {
-            setTimeout(() => msg.delete(), 10000);
-          });
-      if (cmd.inVoiceChannel && !message.member.voice.channel)
-        return message
-          .reply({
-            embeds: [
-              {
-                color: randomColor(),
-                description: `\`\`\`xl\n${client.emotes.error} | 'Tu dois être dans un canal vocal, chacal!'\`\`\``,
-              },
-            ],
-          })
-          .then((msg) => {
-            setTimeout(() => msg.delete(), 10000);
-          });
-      try {
-        cmd.run(client, message, Args);
-      } catch (e) {
-        console.error(e);
-        message.reply(`Erreur: ${e}`);
+        case "dégage-moi":
+          if (message.member.permissions.has("ADMINISTRATOR")) {
+            kick_id(message, args);
+          } else {
+            not_allowed_cmd(message, client.emotes.error);
+          }
+          break;
+
+        case "ban-moi":
+          if (message.member.permissions.has("ADMINISTRATOR")) {
+            ban_id(message, args);
+          } else {
+            not_allowed_cmd(message, client.emotes.error);
+          }
+          break;
+
+        case "level":
+          show_level(client.getScore, message);
+          break;
+
+        case "give":
+          score_give(message, client, client.getScore, args);
+          break;
+
+        case "rank":
+          top_rank(message.channel.id, message, client, client.emotes.error);
+          break;
+
+        default:
+          no_cmd(message, client.emotes.error);
+          break;
       }
-    } else {
-      message
-        .reply({
-          embeds: [
-            {
-              color: randomColor(),
-              description: `${client.emotes.error} | Tu dois utiliser cette commande dans le channel <#474553482691608597> !`,
-            },
-          ],
-        })
-        .then((msg) => {
-          setTimeout(() => msg.delete(), 10000);
-        });
-    }
-  }
+      break;
 
-  if (message.content.toLowerCase().includes("gold")) {
-    Gold(message);
-  }
+    case message.content.toLowerCase().startsWith(config.prefix):
+      setTimeout(() => message.delete(), 1000);
+      if (message.channel.id === "474553482691608597") {
+        run_command(
+          message,
+          config.prefix,
+          client.commands,
+          client.aliases,
+          client.emotes.error,
+          client
+        );
+      } else {
+        not_allowed_cmd(message, client.emotes.error);
+      }
+      break;
 
-  if (message.content.toLowerCase().includes("hello")) {
-    Hello(message);
+    case message.content.toLowerCase().includes("gold"):
+      Gold(message);
+      break;
+
+    case message.content.toLowerCase().includes("hello"):
+      Hello(message);
+      break;
   }
 });
 
@@ -461,125 +218,7 @@ client.on("messageReactionRemove", async (reaction, user) => {
     roleRemove(reaction, user);
   }
 });
-const statut = (queue) =>
-  `Volume: \`${queue.volume}%\` | Filtre: \`${
-    queue.filters.join(", ") || "Non"
-  }\` | Boucle: \`${
-    queue.repeatMode
-      ? queue.repeatMode === 2
-        ? "Toute la file d'attente"
-        : "Cette Musique"
-      : "Non"
-  }\` | Lecture automatique: \`${queue.autoplay ? "Oui" : "Non"}\``;
-client.distube
-  .on("playSong", (queue, song) =>
-    queue.textChannel.send({
-      embeds: [
-        {
-          color: randomColor(),
-          description: `\`\`\`xl\n${client.emotes.play} | 'Lecture:'\`\`\` \`${song.name}\` - \`${song.formattedDuration}\``,
-        },
-      ],
-    })
-  )
-  .on("addSong", (queue, song) =>
-    queue.textChannel.send({
-      embeds: [
-        {
-          color: randomColor(),
-          description: `\`\`\`xl\n${
-            client.emotes.success
-          } | 'Ajout de la musique:'\`\`\` \`${song.name}\` - \`${
-            song.formattedDuration
-          }\` à la file d'attente par ${song.user}\n${statut(queue)}`,
-        },
-      ],
-    })
-  )
-  .on("addList", (queue, playlist) =>
-    queue.textChannel.send({
-      embeds: [
-        {
-          color: randomColor(),
-          description: `\`\`\`xl\n${
-            client.emotes.success
-          } | 'Ajout de la playlist:'\`\`\` \`${playlist.name}\` (${
-            playlist.songs.length
-          } musiques) à la file d'attente\n${statut(queue)}`,
-        },
-      ],
-    })
-  )
-  // DisTubeOptions.searchSongs = true
-  .on("searchResult", (message, result) => {
-    let i = 0;
-    message.channel.send({
-      embeds: [
-        {
-          color: randomColor(),
-          description: `\`\`\`xl\n'Choisissez une option parmi les suivantes'\`\`\`\n${result
-            .map(
-              (song) =>
-                `**${++i}**. ${song.name} - \`${song.formattedDuration}\``
-            )
-            .join(
-              "\n"
-            )}\`\`\`xl\n'Entrez autre chose ou attendez 60 secondes pour annuler'\`\`\``,
-        },
-      ],
-    });
-  })
-  // DisTubeOptions.searchSongs = true
-  .on("searchCancel", (message) =>
-    message.channel.send({
-      embeds: [
-        {
-          color: randomColor(),
-          description: `\`\`\`xl\n${client.emotes.error} | Searching canceled\`\`\``,
-        },
-      ],
-    })
-  )
-  .on("error", (channel, e) => {
-    channel.send({
-      embeds: [
-        {
-          color: randomColor(),
-          description: `\`\`\`xl\n${client.emotes.error} | 'Une erreur a été rencontrée:' ${e}\`\`\``,
-        },
-      ],
-    });
-    console.error(e);
-  })
-  .on("empty", (message) =>
-    message.channel.send({
-      embeds: [
-        {
-          color: randomColor(),
-          description: `\`\`\`xl\n'Le canal vocal est vide donc je le quitte !'\`\`\``,
-        },
-      ],
-    })
-  )
-  .on("searchNoResult", (message) =>
-    message.channel.send({
-      embeds: [
-        {
-          color: randomColor(),
-          description: `\`\`\`xl\n${client.emotes.error} | Aucun résultat trouvé !\`\`\``,
-        },
-      ],
-    })
-  )
-  .on("finish", (queue) =>
-    queue.textChannel.send({
-      embeds: [
-        {
-          color: randomColor(),
-          description: `\`\`\`xl\n'Terminé!'\`\`\``,
-        },
-      ],
-    })
-  );
+
+message_distube(client.distube, client.emotes);
 
 client.login(process.env.DISCORDJS_BOT_TOKEN);
