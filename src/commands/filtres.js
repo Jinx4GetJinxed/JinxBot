@@ -27,7 +27,7 @@ module.exports = {
         message.channel.send({
             embeds: [{
                 color: randomColor(),
-                description: `\`\`\`xl\n${client.emotes.success} | 'Filtre dans la file d'attente actuelle: \`${queue.filters.join(", ") || "Non"}'\`\`\`\``
+                description: `\`\`\`xl\n${client.emotes.success} | 'Filtre dans la file d'attente actuelle:'\`\`\` \`${queue.filters.join(", ") || "Non"}\``
             }]
         })
     }

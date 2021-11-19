@@ -17,14 +17,14 @@ module.exports = {
             message.channel.send({
                 embeds: [{
                     color: randomColor(),
-                    description: `\`\`\`xl\n${client.emotes.success} | 'Retourné! En cours de lecture:' \`${song.name}\`\`\`\``
+                    description: `\`\`\`xl\n${client.emotes.success} | 'Retourné! En cours de lecture:'\`\`\` \`${song.name}\``
                 }]
             })
         } catch (e) {
             message.channel.send({
                 embeds: [{
                     color: randomColor(),
-                    description: `\`\`\`xl\n${client.emotes.error} | 'Erreur:' \`${e}\`\`\`\``
+                    description: `\`\`\`xl\n${client.emotes.error} | 'Erreur:'\`\`\` \`${e}\``
                 }]
             })
         }

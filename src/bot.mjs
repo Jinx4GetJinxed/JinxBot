@@ -1,4 +1,4 @@
-import {} from "dotenv/config";
+import { } from "dotenv/config";
 import { Client, Intents, Collection, MessageEmbed } from "discord.js";
 import { Gold, Hello } from "./fonctions/cmd_startwith.js";
 import {

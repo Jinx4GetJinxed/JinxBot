@@ -22,16 +22,29 @@ module.exports = {
                 mode = 1
                 break
             case "queue":
+            case "q":
                 mode = 2
+                break;
+            default:
+                mode = -1
                 break
         }
-        mode = queue.setRepeatMode(mode)
-        mode = mode ? mode === 2 ? "Répétition de la file d'attente" : "Répéter la chanson" : "Off"
-        message.channel.send({
-            embeds: [{
-                color: randomColor(),
-                description: `\`\`\`xl\n${client.emotes.repeat} | 'Réglez le mode de répétition sur' ${mode}\`\`\``
-            }]
-        })
+        if (mode != -1) {
+            mode = queue.setRepeatMode(mode)
+            mode = mode ? mode === 2 ? "Répétition de la file d'attente" : "Répéter la chanson" : "Off"
+            message.channel.send({
+                embeds: [{
+                    color: randomColor(),
+                    description: `\`\`\`xl\n${client.emotes.repeat} | 'Réglez le mode de répétition sur'\`\`\` \`${mode}\``
+                }]
+            }).then(msg => { setTimeout(() => msg.delete(), 10000) })
+        }else{
+            message.reply({
+                embeds: [{
+                    color: randomColor(),
+                    description: `\`\`\`xl\n${client.emotes.error} | 'Que dois-je itérer?'\`\`\``
+                }]
+            }).then(msg => { setTimeout(() => msg.delete(), 10000) })
+        }
     }
 }

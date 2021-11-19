@@ -1,4 +1,7 @@
 const {randomColor} = require('../fonctions/random_color');
+const { MessageEmbed } = require('discord.js')
+const SQLite = require("better-sqlite3");
+const sql = new SQLite("./scores.sqlite");
 
 async function score_add(getScore, setScore, message) {
   let score = getScore.get(message.author.id, message.guild.id);

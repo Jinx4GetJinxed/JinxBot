@@ -24,7 +24,7 @@ module.exports = {
             message.channel.send({
                 embeds: [{
                     color: randomColor(),
-                    description: `\`\`\`xl\n${client.emotes.error} | 'Erreur:' \`${e}\`\`\`\``
+                    description: `\`\`\`xl\n${client.emotes.error} | 'Erreur:'\`\`\` \`${e}\``
                 }]
             })
         }
