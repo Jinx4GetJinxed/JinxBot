@@ -30,7 +30,7 @@ module.exports = {
         message.channel.send({
             embeds: [{
                 color: randomColor(),
-                description: `\`\`\`xl\n${client.emotes.repeat} | 'Réglez le mode de répétition sur' \`${mode}\`\`\`\``
+                description: `\`\`\`xl\n${client.emotes.repeat} | 'Réglez le mode de répétition sur' ${mode}\`\`\``
             }]
         })
     }

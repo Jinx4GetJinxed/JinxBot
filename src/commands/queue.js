@@ -2,7 +2,7 @@ const { randomColor } = require("../fonctions/random_color")
 
 module.exports = {
     name: "queue",
-    aliases: ["q"],
+    aliases: ["q","queue"],
     run: async (client, message, args) => {
         const queue = client.distube.getQueue(message)
         if (!queue)

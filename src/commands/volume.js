@@ -25,7 +25,7 @@ module.exports = {
         message.channel.send({
             embeds: [{
                 color: randomColor(),
-                description: `\`\`\`xl\n${client.emotes.success} | 'Volume réglé sur' \`${volume}\`\`\`\``
+                description: `\`\`\`xl\n${client.emotes.success} | 'Volume réglé sur' ${volume}\`\`\``
             }]
         })
     }
