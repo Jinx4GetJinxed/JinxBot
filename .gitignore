@@ -2,5 +2,3 @@
 .env
 .env.local
 .env.*.local
-#base de données
-.sqlite
