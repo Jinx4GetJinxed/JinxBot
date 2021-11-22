@@ -2,7 +2,29 @@ const { randomColor } = require("../fonctions/random_color");
 const { MessageEmbed } = require("discord.js");
 const SQLite = require("better-sqlite3");
 const sql = new SQLite("./scores.sqlite");
-const { getScore_fct, setScore_fct } = require("./tables")
+const { getScore_fct, setScore_fct } = require("./tables");
+const config = require("../config.json");
+
+async function level_up_message(message, level) {
+  message.reply({
+    embeds: [
+      {
+        color: randomColor(),
+        description: `\`${message.member.user.tag}\`, tu as atteint le niveau \`${curLevel}\` et tu viens de passer au rang \`${level}\` !!!`,
+      },
+    ],
+  });
+}
+
+async function ajout_role(RoleID, message) {
+  let role = message.guild.roles.cache.find((r) => r.id === RoleID);
+  message.member.roles.add(role);
+}
+
+async function supp_role(RoleID, message) {
+  let role = message.guild.roles.cache.find((r) => r.id === RoleID);
+  message.member.roles.remove(role);
+}
 
 async function score_add(client, message) {
   client.getScore = getScore_fct();
@@ -21,10 +43,10 @@ async function score_add(client, message) {
   }
 
   // Increment the score
-  score.points += Math.floor(Math.random() * 5);
+  score.points += Math.floor(Math.random() * 10);
 
   // Calculate the current level through MATH OMG HALP.
-  const curLevel = Math.floor(0.1 * Math.sqrt(score.points));
+  const curLevel = Math.floor(0.25 * Math.sqrt(score.points));
 
   // Check if the user has leveled up, and let them know if they have:
   if (score.level < curLevel) {
@@ -32,42 +54,57 @@ async function score_add(client, message) {
     score.level++;
     switch (score.level) {
       case 1:
-        message.author.roles.add(config.role.beginner);
+        ajout_role(config.role.beginner, message);
+        level_up_message(message, "<@&831798215916519434>");
         break;
 
       case 2:
-        await message.author.roles.remove(config.role.beginner);
-        message.author.roles.add(config.role.amateur);
+        supp_role(config.role.beginner, message);
+        ajout_role(config.role.amateur, message);
+        level_up_message(message, "<@&831798217322397716>");
         break;
 
       case 5:
-        message.author.roles.remove(config.role.amateur);
-        message.author.roles.add(config.role.skilled);
+        supp_role(config.role.amateur, message);
+        ajout_role(config.role.skilled, message);
+        level_up_message(message, "<@&831798219230281728>");
         break;
 
       case 10:
-        message.author.roles.remove(config.role.skilled);
-        message.author.roles.add(config.role.conqueror);
+        supp_role(config.role.skilled, message);
+        ajout_role(config.role.conqueror, message);
+        level_up_message(message, "<@&831798220823724033>");
         break;
 
       case 15:
-        message.author.roles.remove(config.role.conqueror);
-        message.author.roles.add(config.role.marechal);
+        supp_role(config.role.conqueror, message);
+        ajout_role(config.role.marechal, message);
+        level_up_message(message, "<@&840765286403407884>");
         break;
 
       case 20:
-        message.author.roles.remove(config.role.marechal);
-        message.author.roles.add(config.role.emperor);
+        supp_role(config.role.marechal, message);
+        ajout_role(config.role.emperor, message);
+        level_up_message(message, "<@&831798672211574865>");
         break;
 
       case 30:
-        message.author.roles.remove(config.role.emperor);
-        message.author.roles.add(config.role.ketaminator);
+        supp_role(config.role.emperor, message);
+        ajout_role(config.role.ketaminator, message);
+        level_up_message(message, "<@&831803492028645386>");
+        break;
+
+      default:
+        message.reply({
+          embeds: [
+            {
+              color: randomColor(),
+              description: `\`${message.member.user.tag}\`, tu as atteint le niveau \`${curLevel}\` ! N'oublie pas de dab !`,
+            },
+          ],
+        });
         break;
     }
-    message.reply(
-      `\`\`\`xl\n'Tu as atteint le niveau \`**${curLevel}**\` ! N'oublie pas de dab !'\`\`\``
-    );
   }
 
   client.setScore.run(score);
@@ -122,10 +159,17 @@ function show_level(client, message) {
   client.getScore = getScore_fct();
 
   let score = client.getScore.get(message.author.id, message.guild.id);
+  let nextXPscore =
+    Math.pow(Math.floor(Number(score.level + 1) / 0.25), 2) - score.points;
   return message
-    .reply(
-      `Tu as actuellement ${score.points} points d'expérience et tu es niveau ${score.level}!`
-    )
+    .reply({
+      embeds: [
+        {
+          color: randomColor(),
+          description: `Tu as actuellement \`${score.points}\` points d'expérience et tu es niveau \`${score.level}\`!(Prochain niveau dans \`${nextXPscore}\` points d'exp)`,
+        },
+      ],
+    })
     .then((msg) => {
       setTimeout(() => msg.delete(), 5000);
     });
