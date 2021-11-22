@@ -1,4 +1,4 @@
-import { } from "dotenv/config";
+import {} from "dotenv/config";
 import { Client, Intents, Collection, MessageEmbed } from "discord.js";
 import { Gold, Hello } from "./fonctions/cmd_startwith.js";
 import {
@@ -98,9 +98,6 @@ client.on("ready", () => {
   if (!table["count(*)"]) {
     create_table();
   }
-  // And then we have two prepared statements to get and set the score data.
-  client.getScore = getScore_fct();
-  client.setScore = setScore_fct();
 });
 
 client.on("guildMemberAdd", async (member) => {
@@ -112,20 +109,15 @@ client.on("guildMemberRemove", async (member) => {
 });
 
 client.on("messageCreate", async (message) => {
+  if (message.author.bot || !message.guild) return;
+  score_add(client, message);
+  
   const [CMD_NAME, ...args] = message.content
     .trim()
     .substring(PREFIX.length)
     .split(/\s+/);
 
   switch (true) {
-    case message.author.bot:
-      return;
-      break;
-
-    case message.guild:
-      score_add(client.getScore, client.setScore, message);
-      break;
-
     case message.content.startsWith(PREFIX):
       setTimeout(() => message.delete(), 1000);
       switch (CMD_NAME) {
@@ -160,7 +152,7 @@ client.on("messageCreate", async (message) => {
           break;
 
         case "level":
-          show_level(client.getScore, message);
+          show_level(client, message);
           break;
 
         case "give":

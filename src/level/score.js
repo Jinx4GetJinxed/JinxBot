@@ -1,10 +1,14 @@
-const {randomColor} = require('../fonctions/random_color');
-const { MessageEmbed } = require('discord.js')
+const { randomColor } = require("../fonctions/random_color");
+const { MessageEmbed } = require("discord.js");
 const SQLite = require("better-sqlite3");
 const sql = new SQLite("./scores.sqlite");
+const { getScore_fct, setScore_fct } = require("./tables")
 
-async function score_add(getScore, setScore, message) {
-  let score = getScore.get(message.author.id, message.guild.id);
+async function score_add(client, message) {
+  client.getScore = getScore_fct();
+  client.setScore = setScore_fct();
+
+  let score = client.getScore.get(message.author.id, message.guild.id);
 
   if (!score) {
     score = {
@@ -17,7 +21,7 @@ async function score_add(getScore, setScore, message) {
   }
 
   // Increment the score
-  score.points++;
+  score.points += Math.floor(Math.random() * 5);
 
   // Calculate the current level through MATH OMG HALP.
   const curLevel = Math.floor(0.1 * Math.sqrt(score.points));
@@ -66,10 +70,10 @@ async function score_add(getScore, setScore, message) {
     );
   }
 
-  setScore.run(score);
+  client.setScore.run(score);
 }
 
-function score_give(message, client, getScore, args) {
+function score_give(message, args) {
   // Limited to guild owner - adjust to your own preference!
   if (!message.author.id === "305032028947087360")
     return message.reply(
@@ -88,7 +92,7 @@ function score_give(message, client, getScore, args) {
     return message.reply("You didn't tell me how many points to give...");
 
   // Get their current points.
-  let userScore = getScore.get(user.id, message.guild.id);
+  let userScore = client.getScore.get(user.id, message.guild.id);
 
   // It's possible to give points to a user we haven't seen, so we need to initiate defaults here too!
   if (!userScore) {
@@ -114,8 +118,10 @@ function score_give(message, client, getScore, args) {
   );
 }
 
-function show_level(getScore, message) {
-  let score = getScore.get(message.author.id, message.guild.id);
+function show_level(client, message) {
+  client.getScore = getScore_fct();
+
+  let score = client.getScore.get(message.author.id, message.guild.id);
   return message
     .reply(
       `Tu as actuellement ${score.points} points d'expérience et tu es niveau ${score.level}!`
