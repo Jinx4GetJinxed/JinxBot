@@ -149,15 +149,30 @@ client.on("messageCreate", async (message) => {
           break;
 
         case "level":
-          show_level(client, message);
+          if (message.channel.id === "833824151671930920") {
+            show_level(client, message);
+          } else {
+            wrong_channel_cmd1(message, client.emotes.error);
+          }
           break;
 
         case "give":
-          score_give(message, client, client.getScore, args);
+          if (message.member.permissions.has("ADMINISTRATOR")) {
+            if (message.channel.id === "833824151671930920") {
+              score_give(message, client, client.getScore, args);
+            } else {
+              wrong_channel_cmd1(message, client.emotes.error);
+            }
+          } else {
+            not_allowed_cmd(message, client.emotes.error);
+          }
           break;
-
         case "rank":
-          top_rank(message.channel.id, message, client, client.emotes.error);
+          if (message.channel.id === "833824151671930920") {
+            top_rank(message.channel.id, message, client, client.emotes.error);
+          } else {
+            wrong_channel_cmd1(message, client.emotes.error);
+          }
           break;
 
         default:
@@ -178,7 +193,7 @@ client.on("messageCreate", async (message) => {
           client
         );
       } else {
-        not_allowed_cmd(message, client.emotes.error);
+        wrong_channel_cmd(message, client.emotes.error);
       }
       break;
 
