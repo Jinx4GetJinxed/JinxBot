@@ -1,62 +1,59 @@
-import {} from "dotenv/config";
-import { Client, Intents, Collection, MessageEmbed } from "discord.js";
-import { Gold, Hello } from "./fonctions/cmd_startwith.js";
-import {
-  kick_id,
-  ban_id,
-  no_cmd,
-  not_allowed_cmd,
-  cmd_no_channel,
-} from "./fonctions/moderator_function.js";
-import { bio, status } from "./fonctions/statut.js";
-import {
-  Consignes1,
-  Consignes2,
-  Consignes3,
-  Consignes4,
-  Consignes5,
-} from "./fonctions/consignes_function.js";
-import {
-  partialMessage,
-  roleAdd,
-  roleRemove,
-  msgAddReaction,
-  msgRemoveReaction,
-} from "./fonctions/function_roles.js";
-import { DisTube } from "distube";
-import { SpotifyPlugin } from "@distube/spotify";
-import { SoundCloudPlugin } from "@distube/soundcloud";
-import { createRequire } from "module";
-import {
-  table_prep,
-  create_table,
-  getScore_fct,
-  setScore_fct,
-} from "./level/tables.js";
-import { add_membre } from "./fonctions/ajout_membre.js";
-import { supp_membre } from "./fonctions/supp_membre.js";
-import { score_add, score_give, show_level, top_rank } from "./level/score.js";
-import { run_command } from "./fonctions/lecture_commands.js";
-import { message_distube } from "./message_distube.js/main_message.js";
-
-const require = createRequire(import.meta.url);
-const config = require("./config.json");
-const SQLite = require("better-sqlite3");
-const sql = new SQLite("./scores.sqlite");
-
-const fs = require("fs");
-const client = new Client({
-  intents: [
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-    Intents.FLAGS.GUILD_VOICE_STATES,
-    Intents.FLAGS.GUILD_MEMBERS,
-    Intents.FLAGS.GUILD_PRESENCES,
-  ],
-  partials: ["MESSAGE", "CHANNEL", "REACTION"],
-});
-const PREFIX = "Jinx!";
+/**
+ * @author Id Brahim Hakim
+ *
+ * @import "dotenv/config"
+ * @import "discord.js"
+ */
+ import { } from "dotenv/config";
+ import { Client, Intents, Collection } from "discord.js";
+ /**
+  * @import "../src/fonctions"
+  */
+ import { Gold, Hello } from "./fonctions/cmd_startwith.js";
+ import { kick_id, ban_id, no_cmd, not_allowed_cmd } from "./fonctions/moderator_function.js";
+ import { bio, status } from "./fonctions/statut.js";
+ import { Consignes1, Consignes2, Consignes3, Consignes4, Consignes5 } from "./fonctions/consignes_function.js";
+ import { partialMessage, roleAdd, roleRemove, msgAddReaction, msgRemoveReaction } from "./fonctions/function_roles.js";
+ import { add_membre } from "./fonctions/ajout_membre.js";
+ import { supp_membre } from "./fonctions/supp_membre.js";
+ import { run_command } from "./fonctions/lecture_commands.js";
+ /**
+  * @import "distube"
+  */
+ import { DisTube } from "distube";
+ import { SpotifyPlugin } from "@distube/spotify";
+ import { SoundCloudPlugin } from "@distube/soundcloud";
+ import { message_distube } from "./message_distube.js/main_message.js";
+ /**
+  * @import "../src/level"
+  */
+ import { table_prep, create_table } from "./level/tables.js";
+ import { score_add, score_give, show_level, top_rank } from "./level/score.js";
+ /**
+  * @import "../src/level"
+  * @import "../src/level"
+  * @import "../src/level"
+  * @import ""
+  * @import ""
+  */
+ import { createRequire } from "module";
+ const require = createRequire(import.meta.url);
+ const config = require("./config.json");
+ const SQLite = require("better-sqlite3");
+ const sql = new SQLite("./scores.sqlite");
+ const fs = require("fs");
+ const client = new Client({
+   intents: [
+     Intents.FLAGS.GUILDS,
+     Intents.FLAGS.GUILD_MESSAGES,
+     Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+     Intents.FLAGS.GUILD_VOICE_STATES,
+     Intents.FLAGS.GUILD_MEMBERS,
+     Intents.FLAGS.GUILD_PRESENCES,
+   ],
+   partials: ["MESSAGE", "CHANNEL", "REACTION"],
+ });
+const PREFIX = "jinx!";
 
 client.distube = new DisTube(client, {
   emitNewSongOnly: true,
@@ -111,14 +108,14 @@ client.on("guildMemberRemove", async (member) => {
 client.on("messageCreate", async (message) => {
   if (message.author.bot || !message.guild) return;
   score_add(client, message);
-  
+
   const [CMD_NAME, ...args] = message.content
     .trim()
     .substring(PREFIX.length)
     .split(/\s+/);
 
   switch (true) {
-    case message.content.startsWith(PREFIX):
+    case message.content.toLowerCase().startsWith(PREFIX):
       setTimeout(() => message.delete(), 1000);
       switch (CMD_NAME) {
         case "consignes":
