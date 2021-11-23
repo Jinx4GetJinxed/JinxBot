@@ -29,7 +29,8 @@
     "mongoose": "^6.0.12",
     "node-opus": "^0.3.3",
     "nodemon": "^2.0.14",
-    "opusscript": "^0.0.8"
+    "opusscript": "^0.0.8",
+    "ansi-regex": ">=5.0.1"
   },
   "devDependencies": {
     "typescript": "^4.4.3"
