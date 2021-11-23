@@ -58,6 +58,21 @@ function wrong_channel_cmd(message, emotesError) {
     });
 }
 
+function wrong_channel_cmd1(message, emotesError) {
+  message
+    .reply({
+      embeds: [
+        {
+          color: randomColor(),
+          description: `${emotesError} | Tu dois utiliser cette commande dans le channel <#833824151671930920> !`,
+        },
+      ],
+    })
+    .then((msg) => {
+      setTimeout(() => msg.delete(), 10000);
+    });
+}
+
 function not_allowed_cmd(message, emotesError){
     message
     .reply({
@@ -103,4 +118,4 @@ function cmd_no_channel(message, emotesError){
   });
 }
 
-module.exports = { kick_id, ban_id, no_cmd, not_allowed_cmd, wrong_channel_cmd, cmd_no_channel };
+module.exports = { kick_id, ban_id, no_cmd, not_allowed_cmd, wrong_channel_cmd, cmd_no_channel, wrong_channel_cmd1 };
