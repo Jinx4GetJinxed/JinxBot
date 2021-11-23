@@ -58,7 +58,7 @@ const client = new Client({
   ],
   partials: ["MESSAGE", "CHANNEL", "REACTION"],
 });
-const PREFIX = "Jinx!";
+const PREFIX = "jinx!";
 
 client.distube = new DisTube(client, {
   emitNewSongOnly: true,
@@ -120,7 +120,7 @@ client.on("messageCreate", async (message) => {
     .split(/\s+/);
 
   switch (true) {
-    case message.content.startsWith(PREFIX):
+    case message.content.toLowerCase().startsWith(PREFIX):
       setTimeout(() => message.delete(), 1000);
       switch (CMD_NAME) {
         case "consignes":
