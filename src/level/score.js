@@ -5,12 +5,14 @@ const sql = new SQLite("./scores.sqlite");
 const { getScore_fct, setScore_fct } = require("./tables");
 const config = require("../config.json");
 
-async function level_up_message(message, level) {
+async function level_up_message(client, message, level) {
+  client.getScore = getScore_fct();
+  let score = client.getScore.get(message.author.id, message.guild.id);
   message.reply({
     embeds: [
       {
         color: randomColor(),
-        description: `\`${message.member.user.tag}\`, tu as atteint le niveau \`${curLevel}\` et tu viens de passer au rang \`${level}\` !!!`,
+        description: `\`${message.member.user.tag}\`, tu as atteint le niveau \`${score.level}\` et tu viens de passer au rang ${level} !!!`,
       },
     ],
   });
@@ -47,11 +49,9 @@ async function score_add(client, message) {
 
   // Calculate the current level through MATH OMG HALP.
   const curLevel = Math.floor(0.25 * Math.sqrt(score.points));
-
-  // Check if the user has leveled up, and let them know if they have:
   if (score.level < curLevel) {
-    // Level up!
     score.level++;
+    client.setScore.run(score);
     switch (score.level) {
       case 1:
         ajout_role(config.role.beginner, message);
@@ -61,37 +61,37 @@ async function score_add(client, message) {
       case 2:
         supp_role(config.role.beginner, message);
         ajout_role(config.role.amateur, message);
-        level_up_message(message, "<@&831798217322397716>");
+        level_up_message(client, message, "<@&831798217322397716>");
         break;
 
       case 5:
         supp_role(config.role.amateur, message);
         ajout_role(config.role.skilled, message);
-        level_up_message(message, "<@&831798219230281728>");
+        level_up_message(client, message, "<@&831798219230281728>");
         break;
 
       case 10:
         supp_role(config.role.skilled, message);
         ajout_role(config.role.conqueror, message);
-        level_up_message(message, "<@&831798220823724033>");
+        level_up_message(client, message, "<@&831798220823724033>");
         break;
 
       case 15:
         supp_role(config.role.conqueror, message);
         ajout_role(config.role.marechal, message);
-        level_up_message(message, "<@&840765286403407884>");
+        level_up_message(client, message, "<@&840765286403407884>");
         break;
 
       case 20:
         supp_role(config.role.marechal, message);
         ajout_role(config.role.emperor, message);
-        level_up_message(message, "<@&831798672211574865>");
+        level_up_message(client, message, "<@&831798672211574865>");
         break;
 
       case 30:
         supp_role(config.role.emperor, message);
         ajout_role(config.role.ketaminator, message);
-        level_up_message(message, "<@&831803492028645386>");
+        level_up_message(client, message, "<@&831803492028645386>");
         break;
 
       default:
@@ -99,19 +99,16 @@ async function score_add(client, message) {
           embeds: [
             {
               color: randomColor(),
-              description: `\`${message.member.user.tag}\`, tu as atteint le niveau \`${curLevel}\` ! N'oublie pas de dab !`,
+              description: `\`${message.member.user.tag}\`, tu as atteint le niveau \`${score.level}\` ! N'oublie pas de dab !`,
             },
           ],
         });
         break;
     }
-  }
-
-  client.setScore.run(score);
+  } else { client.setScore.run(score); }
 }
 
 function score_give(message, args) {
-  // Limited to guild owner - adjust to your own preference!
   if (!message.author.id === "305032028947087360")
     return message.reply(
       "FDP, tu ne t'appelles pas " + message.guild.ownerId.name
@@ -171,7 +168,7 @@ function show_level(client, message) {
       ],
     })
     .then((msg) => {
-      setTimeout(() => msg.delete(), 5000);
+      setTimeout(() => msg.delete(), 10000);
     });
 }
 
