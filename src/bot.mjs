@@ -92,7 +92,7 @@ client.on("ready", () => {
   }, 15000);
 
   console.log(`le bot ${client.user.tag} est connecté`);
-  
+
   const table = table_prep();
   if (!table["count(*)"]) {
     create_table();
@@ -169,13 +169,15 @@ client.on("messageCreate", async (message) => {
             not_allowed_cmd(message, client.emotes.error);
           }
           break;
-        case "rank":
+        case "rank": case "top": 
           if (message.channel.id === "833824151671930920") {
             top_rank(message.channel.id, message, client, client.emotes.error);
           } else {
             wrong_channel_cmd1(message, client.emotes.error);
           }
           break;
+
+        case clear:
 
         default:
           no_cmd(message, client.emotes.error);
