@@ -45,10 +45,10 @@ async function score_add(client, message) {
   }
 
   // Increment the score
-  score.points += Math.floor(Math.random() * 10);
+  score.points += Math.floor(Math.random() * 5) + 1;
 
   // Calculate the current level through MATH OMG HALP.
-  const curLevel = Math.floor(0.25 * Math.sqrt(score.points));
+  const curLevel = Math.floor(0.2 * Math.sqrt(score.points));
   if (score.level < curLevel) {
     score.level++;
     client.setScore.run(score);
@@ -108,7 +108,7 @@ async function score_add(client, message) {
   } else { client.setScore.run(score); }
 }
 
-function score_give(message, args) {
+function score_give(message, args, client) {
   if (!message.author.id === "305032028947087360")
     return message.reply(
       "FDP, tu ne t'appelles pas " + message.guild.ownerId.name
@@ -120,6 +120,9 @@ function score_give(message, args) {
     return message.reply(
       "BG, tu dois mentionner quelqu'un ou donner son identité!"
     );
+
+  client.getScore = getScore_fct();
+  client.setScore = setScore_fct();
 
   const pointsToAdd = parseInt(args[1], 10);
   if (!pointsToAdd)
@@ -141,7 +144,7 @@ function score_give(message, args) {
   userScore.points += pointsToAdd;
 
   // We also want to update their level (but we won't notify them if it changes)
-  let userLevel = Math.floor(0.1 * Math.sqrt(score.points));
+  let userLevel = Math.floor(0.2 * Math.sqrt(score.points));
   userScore.level = userLevel;
 
   // And we save it!
@@ -157,7 +160,7 @@ function show_level(client, message) {
 
   let score = client.getScore.get(message.author.id, message.guild.id);
   let nextXPscore =
-    Math.pow(Math.floor(Number(score.level + 1) / 0.25), 2) - score.points;
+    Math.pow(Math.floor(Number(score.level + 1) / 0.2), 2) - score.points;
   return message
     .reply({
       embeds: [
@@ -182,8 +185,7 @@ function top_rank(messageChannel, message, client, errorEmote) {
 
     // Now shake it and show it! (as a nice embed, too!)
     const embed = new MessageEmbed()
-      .setTitle("TOP 10 DU SERVEUR")
-      .setAuthor(client.user.username, client.user.avatarURL())
+      .setDescription(`\`\`\`xl\n${config.emoji.queue} | 'TOP 10 DU SERVEUR' | ${config.emoji.queue}\`\`\``)
       .setColor(randomColor());
 
     for (const data of top10) {
