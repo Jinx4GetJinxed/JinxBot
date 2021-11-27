@@ -17,6 +17,7 @@ import { partialMessage, roleAdd, roleRemove, msgAddReaction, msgRemoveReaction 
 import { add_membre } from "./fonctions/ajout_membre.js";
 import { supp_membre } from "./fonctions/supp_membre.js";
 import { run_command } from "./fonctions/lecture_commands.js";
+import { clear_command } from "./fonctions/clear_fonction.js";
 /**
  * @import "distube"
  */
@@ -169,7 +170,7 @@ client.on("messageCreate", async (message) => {
             not_allowed_cmd(message, client.emotes.error);
           }
           break;
-        case "rank": case "top": 
+        case "rank": case "top":
           if (message.channel.id === "833824151671930920") {
             top_rank(message.channel.id, message, client, client.emotes.error);
           } else {
@@ -177,7 +178,9 @@ client.on("messageCreate", async (message) => {
           }
           break;
 
-        case clear:
+        case "clear": case "c":
+          clear_command(message, args[0]);
+          break
 
         default:
           no_cmd(message, client.emotes.error);

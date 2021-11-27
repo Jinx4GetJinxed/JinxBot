@@ -10,20 +10,17 @@ function table_prep() {
 }
 
 function create_table() {
-  // If the table isn't there, create it and setup the database correctly.
   sql
     .prepare(
       "CREATE TABLE scores (id TEXT PRIMARY KEY, user TEXT, guild TEXT, points INTEGER, level INTEGER);"
     )
     .run();
-  // Ensure that the "id" row is always unique and indexed.
   sql.prepare("CREATE UNIQUE INDEX idx_scores_id ON scores (id);").run();
   sql.pragma("synchronous = 1");
   sql.pragma("journal_mode = wal");
 }
 
 function getScore_fct() {
-  // And then we have two prepared statements to get and set the score data.
   return sql.prepare("SELECT * FROM scores WHERE user = ? AND guild = ?");
 }
 

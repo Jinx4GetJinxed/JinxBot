@@ -44,11 +44,9 @@ async function score_add(client, message) {
     };
   }
 
-  // Increment the score
   score.points += Math.floor(Math.random() * 5) + 1;
-
-  // Calculate the current level through MATH OMG HALP.
   const curLevel = Math.floor(0.2 * Math.sqrt(score.points));
+
   if (score.level < curLevel) {
     score.level++;
     client.setScore.run(score);
@@ -126,12 +124,10 @@ function score_give(message, args, client) {
 
   const pointsToAdd = parseInt(args[1], 10);
   if (!pointsToAdd)
-    return message.reply("You didn't tell me how many points to give...");
+    return message.reply("Batard tu ne me donne pas de points");
 
-  // Get their current points.
   let userScore = client.getScore.get(user.id, message.guild.id);
 
-  // It's possible to give points to a user we haven't seen, so we need to initiate defaults here too!
   if (!userScore) {
     userScore = {
       id: `${message.guild.id}-${user.id}`,
@@ -143,15 +139,13 @@ function score_give(message, args, client) {
   }
   userScore.points += pointsToAdd;
 
-  // We also want to update their level (but we won't notify them if it changes)
   let userLevel = Math.floor(0.2 * Math.sqrt(score.points));
   userScore.level = userLevel;
 
-  // And we save it!
   client.setScore.run(userScore);
 
   return message.channel.send(
-    `${user.tag} has received ${pointsToAdd} points and now stands at ${userScore.points} points.`
+    `${user.tag} a reçu ${pointsToAdd} points d'exp et mtn il a ${userScore.points} points.`
   );
 }
 
@@ -183,7 +177,6 @@ function top_rank(messageChannel, message, client, errorEmote) {
       )
       .all(message.guild.id);
 
-    // Now shake it and show it! (as a nice embed, too!)
     const embed = new MessageEmbed()
       .setDescription(`\`\`\`xl\n${config.emoji.queue} | 'TOP 10 DU SERVEUR' | ${config.emoji.queue}\`\`\``)
       .setColor(randomColor());
