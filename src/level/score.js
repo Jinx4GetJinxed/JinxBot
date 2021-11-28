@@ -53,7 +53,7 @@ async function score_add(client, message) {
     switch (score.level) {
       case 1:
         ajout_role(config.role.beginner, message);
-        level_up_message(message, "<@&831798215916519434>");
+        level_up_message(client, message, "<@&831798215916519434>");
         break;
 
       case 2:

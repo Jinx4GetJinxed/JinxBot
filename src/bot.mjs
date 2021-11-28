@@ -10,7 +10,7 @@ import { Client, Intents, Collection } from "discord.js";
  * @import "../src/fonctions"
  */
 import { Gold, Hello } from "./fonctions/cmd_startwith.js";
-import { kick_id, ban_id, no_cmd, not_allowed_cmd } from "./fonctions/moderator_function.js";
+import { kick_id, ban_id, no_cmd, not_allowed_cmd, wrong_channel_cmd, wrong_channel_cmd1 } from "./fonctions/moderator_function.js";
 import { bio, status } from "./fonctions/statut.js";
 import { Consignes1, Consignes2, Consignes3, Consignes4, Consignes5 } from "./fonctions/consignes_function.js";
 import { partialMessage, roleAdd, roleRemove, msgAddReaction, msgRemoveReaction } from "./fonctions/function_roles.js";
@@ -179,7 +179,7 @@ client.on("messageCreate", async (message) => {
           break;
 
         case "clear": case "c":
-          clear_command(message, args[0]);
+          setTimeout(() => clear_command(message, args[0]), 2000);
           break
 
         default:
