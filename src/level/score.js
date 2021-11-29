@@ -1,16 +1,17 @@
-const {randomColor} = require('../fonctions/random_color');
+const { randomColor } = require('../fonctions/random_color');
 const { MessageEmbed } = require('discord.js')
 const SQLite = require("better-sqlite3");
 const sql = new SQLite("./scores.sqlite");
 
-async function score_add(getScore, setScore, message) {
-  let score = getScore.get(message.author.id, message.guild.id);
+async function score_add(getScore, setScore, message, messageGuild) {
+  console.log(1)
+  let score = getScore.get(message.author.id, messageGuild.id);
 
   if (!score) {
     score = {
-      id: `${message.guild.id}-${message.author.id}`,
+      id: `${messageGuild.id}-${message.author.id}`,
       user: message.author.id,
-      guild: message.guild.id,
+      guild: messageGuild.id,
       points: 0,
       level: 0,
     };
@@ -18,6 +19,8 @@ async function score_add(getScore, setScore, message) {
 
   // Increment the score
   score.points++;
+  console.log(score.points)
+  console.log(1)
 
   // Calculate the current level through MATH OMG HALP.
   const curLevel = Math.floor(0.1 * Math.sqrt(score.points));
@@ -32,7 +35,7 @@ async function score_add(getScore, setScore, message) {
         break;
 
       case 2:
-        await message.author.roles.remove(config.role.beginner);
+        message.author.roles.remove(config.role.beginner);
         message.author.roles.add(config.role.amateur);
         break;
 
@@ -114,8 +117,8 @@ function score_give(message, client, getScore, args) {
   );
 }
 
-function show_level(getScore, message) {
-  let score = getScore.get(message.author.id, message.guild.id);
+function show_level(getScore, message, messageGuild) {
+  let score = getScore.get(message.author.id, messageGuild.id);
   return message
     .reply(
       `Tu as actuellement ${score.points} points d'expérience et tu es niveau ${score.level}!`
@@ -125,13 +128,13 @@ function show_level(getScore, message) {
     });
 }
 
-function top_rank(messageChannel, message, client, errorEmote) {
+function top_rank(messageChannel, message, client, errorEmote, messageGuild) {
   if (messageChannel === "833824151671930920") {
     const top10 = sql
       .prepare(
         "SELECT * FROM scores WHERE guild = ? ORDER BY points DESC LIMIT 10;"
       )
-      .all(message.guild.id);
+      .all(messageGuild.id);
 
     // Now shake it and show it! (as a nice embed, too!)
     const embed = new MessageEmbed()

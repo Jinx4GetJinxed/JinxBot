@@ -123,7 +123,7 @@ client.on("messageCreate", async (message) => {
       break;
 
     case message.guild:
-      score_add(client.getScore, client.setScore, message);
+      score_add(client.getScore, client.setScore, message, message.guild);
       break;
 
     case message.content.startsWith(PREFIX):
@@ -160,7 +160,7 @@ client.on("messageCreate", async (message) => {
           break;
 
         case "level":
-          show_level(client.getScore, message);
+          show_level(client.getScore, message, message.guild);
           break;
 
         case "give":
@@ -168,7 +168,7 @@ client.on("messageCreate", async (message) => {
           break;
 
         case "rank":
-          top_rank(message.channel.id, message, client, client.emotes.error);
+          top_rank(message.channel.id, message, client, client.emotes.error, message.guild);
           break;
 
         default:
