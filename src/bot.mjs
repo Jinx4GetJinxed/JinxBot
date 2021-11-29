@@ -1,50 +1,48 @@
+/**
+ * @author Id Brahim Hakim
+ *
+ * @import "dotenv/config"
+ * @import "discord.js"
+ */
 import { } from "dotenv/config";
-import { Client, Intents, Collection, MessageEmbed } from "discord.js";
+import { Client, Intents, Collection } from "discord.js";
+/**
+ * @import "../src/fonctions"
+ */
 import { Gold, Hello } from "./fonctions/cmd_startwith.js";
-import {
-  kick_id,
-  ban_id,
-  no_cmd,
-  not_allowed_cmd,
-  cmd_no_channel,
-} from "./fonctions/moderator_function.js";
+import { kick_id, ban_id, no_cmd, not_allowed_cmd, wrong_channel_cmd, wrong_channel_cmd1 } from "./fonctions/moderator_function.js";
 import { bio, status } from "./fonctions/statut.js";
-import {
-  Consignes1,
-  Consignes2,
-  Consignes3,
-  Consignes4,
-  Consignes5,
-} from "./fonctions/consignes_function.js";
-import {
-  partialMessage,
-  roleAdd,
-  roleRemove,
-  msgAddReaction,
-  msgRemoveReaction,
-} from "./fonctions/function_roles.js";
+import { Consignes1, Consignes2, Consignes3, Consignes4, Consignes5 } from "./fonctions/consignes_function.js";
+import { partialMessage, roleAdd, roleRemove, msgAddReaction, msgRemoveReaction } from "./fonctions/function_roles.js";
+import { add_membre } from "./fonctions/ajout_membre.js";
+import { supp_membre } from "./fonctions/supp_membre.js";
+import { run_command } from "./fonctions/lecture_commands.js";
+import { clear_command } from "./fonctions/clear_fonction.js";
+/**
+ * @import "distube"
+ */
 import { DisTube } from "distube";
 import { SpotifyPlugin } from "@distube/spotify";
 import { SoundCloudPlugin } from "@distube/soundcloud";
-import { createRequire } from "module";
-import {
-  table_prep,
-  create_table,
-  getScore_fct,
-  setScore_fct,
-} from "./level/tables.js";
-import { add_membre } from "./fonctions/ajout_membre.js";
-import { supp_membre } from "./fonctions/supp_membre.js";
-import { score_add, score_give, show_level, top_rank } from "./level/score.js";
-import { run_command } from "./fonctions/lecture_commands.js";
 import { message_distube } from "./message_distube.js/main_message.js";
-
+/**
+ * @import "../src/level"
+ */
+import { table_prep, create_table } from "./level/tables.js";
+import { score_add, score_give, show_level, top_rank } from "./level/score.js";
+/**
+ * @import "module"
+ * @import "./config.json"
+ * @import "better-sqlite3"
+ * @import "fs"
+ */
+import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const config = require("./config.json");
-const SQLite = require("better-sqlite3");
-const sql = new SQLite("./scores.sqlite");
-
 const fs = require("fs");
+/**
+ * @constructor Client
+ */
 const client = new Client({
   intents: [
     Intents.FLAGS.GUILDS,
@@ -56,7 +54,8 @@ const client = new Client({
   ],
   partials: ["MESSAGE", "CHANNEL", "REACTION"],
 });
-const PREFIX = "Jinx!";
+
+const PREFIX = "jinx!";
 
 client.distube = new DisTube(client, {
   emitNewSongOnly: true,
@@ -94,13 +93,11 @@ client.on("ready", () => {
   }, 15000);
 
   console.log(`le bot ${client.user.tag} est connecté`);
+
   const table = table_prep();
   if (!table["count(*)"]) {
     create_table();
   }
-  // And then we have two prepared statements to get and set the score data.
-  client.getScore = getScore_fct();
-  client.setScore = setScore_fct();
 });
 
 client.on("guildMemberAdd", async (member) => {
@@ -112,21 +109,16 @@ client.on("guildMemberRemove", async (member) => {
 });
 
 client.on("messageCreate", async (message) => {
+  if (message.author.bot || !message.guild) return;
+  score_add(client, message);
+
   const [CMD_NAME, ...args] = message.content
     .trim()
     .substring(PREFIX.length)
     .split(/\s+/);
 
   switch (true) {
-    case message.author.bot:
-      return;
-      break;
-
-    case message.guild:
-      score_add(client.getScore, client.setScore, message, message.guild);
-      break;
-
-    case message.content.startsWith(PREFIX):
+    case message.content.toLowerCase().startsWith(PREFIX):
       setTimeout(() => message.delete(), 1000);
       switch (CMD_NAME) {
         case "consignes":
@@ -160,16 +152,35 @@ client.on("messageCreate", async (message) => {
           break;
 
         case "level":
-          show_level(client.getScore, message, message.guild);
+          if (message.channel.id === "833824151671930920") {
+            show_level(client, message);
+          } else {
+            wrong_channel_cmd1(message, client.emotes.error);
+          }
           break;
 
         case "give":
-          score_give(message, client, client.getScore, args);
+          if (message.member.permissions.has("ADMINISTRATOR")) {
+            if (message.channel.id === "833824151671930920") {
+              score_give(message, client, client.getScore, args);
+            } else {
+              wrong_channel_cmd1(message, client.emotes.error);
+            }
+          } else {
+            not_allowed_cmd(message, client.emotes.error);
+          }
+          break;
+        case "rank": case "top":
+          if (message.channel.id === "833824151671930920") {
+            top_rank(message.channel.id, message, client, client.emotes.error);
+          } else {
+            wrong_channel_cmd1(message, client.emotes.error);
+          }
           break;
 
-        case "rank":
-          top_rank(message.channel.id, message, client, client.emotes.error, message.guild);
-          break;
+        case "clear": case "c":
+          setTimeout(() => clear_command(message, args[0]), 2000);
+          break
 
         default:
           no_cmd(message, client.emotes.error);
@@ -189,7 +200,7 @@ client.on("messageCreate", async (message) => {
           client
         );
       } else {
-        not_allowed_cmd(message, client.emotes.error);
+        wrong_channel_cmd(message, client.emotes.error);
       }
       break;
 

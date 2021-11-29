@@ -1,16 +1,14 @@
 const { randomColor } = require("../fonctions/random_color")
 
-function message_distube( Distube, Emotes) {
+function message_distube(Distube, Emotes) {
   const statut = (queue) =>
-  `Volume: \`${queue.volume}%\` | Filtre: \`${
-    queue.filters.join(", ") || "Non"
-  }\` | Boucle: \`${
-    queue.repeatMode
+    `Volume: \`${queue.volume}%\` | Filtre: \`${queue.filters.join(", ") || "Non"
+    }\` | Boucle: \`${queue.repeatMode
       ? queue.repeatMode === 2
         ? "Toute la file d'attente"
         : "Cette Musique"
       : "Non"
-  }\` | Lecture automatique: \`${queue.autoplay ? "Oui" : "Non"}\``;
+    }\` | Lecture automatique: \`${queue.autoplay ? "Oui" : "Non"}\``;
   Distube
     .on("playSong", (queue, song) =>
       queue.textChannel.send({
@@ -27,11 +25,9 @@ function message_distube( Distube, Emotes) {
         embeds: [
           {
             color: randomColor(),
-            description: `\`\`\`xl\n${
-              Emotes.success
-            } | 'Ajout de la musique:'\`\`\` \`${song.name}\` - \`${
-              song.formattedDuration
-            }\` à la file d'attente par ${song.user}\n${statut(queue)}`,
+            description: `\`\`\`xl\n${Emotes.success
+              } | 'Ajout de la musique:'\`\`\` \`${song.name}\` - \`${song.formattedDuration
+              }\` à la file d'attente par ${song.user}\n${statut(queue)}`,
           },
         ],
       })
@@ -41,11 +37,9 @@ function message_distube( Distube, Emotes) {
         embeds: [
           {
             color: randomColor(),
-            description: `\`\`\`xl\n${
-              client.emotes.success
-            } | 'Ajout de la playlist:'\`\`\` \`${playlist.name}\` (${
-              playlist.songs.length
-            } musiques) à la file d'attente\n${statut(queue)}`,
+            description: `\`\`\`xl\n${Emotes.success
+              } | 'Ajout de la playlist:'\`\`\` \`${playlist.name}\` (${playlist.songs.length
+              } musiques) à la file d'attente\n${statut(queue)}`,
           },
         ],
       })
@@ -123,4 +117,4 @@ function message_distube( Distube, Emotes) {
     );
 }
 
-module.exports = { message_distube}
+module.exports = { message_distube }

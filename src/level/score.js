@@ -2,10 +2,37 @@ const { randomColor } = require('../fonctions/random_color');
 const { MessageEmbed } = require('discord.js')
 const SQLite = require("better-sqlite3");
 const sql = new SQLite("./scores.sqlite");
+const { getScore_fct, setScore_fct } = require("./tables");
+const config = require("../config.json");
 
-async function score_add(getScore, setScore, message, messageGuild) {
-  console.log(1)
-  let score = getScore.get(message.author.id, messageGuild.id);
+async function level_up_message(client, message, level) {
+  client.getScore = getScore_fct();
+  let score = client.getScore.get(message.author.id, message.guild.id);
+  message.reply({
+    embeds: [
+      {
+        color: randomColor(),
+        description: `\`${message.member.user.tag}\`, tu as atteint le niveau \`${score.level}\` et tu viens de passer au rang ${level} !!!`,
+      },
+    ],
+  });
+}
+
+async function ajout_role(RoleID, message) {
+  let role = message.guild.roles.cache.find((r) => r.id === RoleID);
+  message.member.roles.add(role);
+}
+
+async function supp_role(RoleID, message) {
+  let role = message.guild.roles.cache.find((r) => r.id === RoleID);
+  message.member.roles.remove(role);
+}
+
+async function score_add(client, message) {
+  client.getScore = getScore_fct();
+  client.setScore = setScore_fct();
+
+  let score = client.getScore.get(message.author.id, message.guild.id);
 
   if (!score) {
     score = {
@@ -17,63 +44,69 @@ async function score_add(getScore, setScore, message, messageGuild) {
     };
   }
 
-  // Increment the score
-  score.points++;
-  console.log(score.points)
-  console.log(1)
+  score.points += Math.floor(Math.random() * 5) + 1;
+  const curLevel = Math.floor(0.2 * Math.sqrt(score.points));
 
-  // Calculate the current level through MATH OMG HALP.
-  const curLevel = Math.floor(0.1 * Math.sqrt(score.points));
-
-  // Check if the user has leveled up, and let them know if they have:
   if (score.level < curLevel) {
-    // Level up!
     score.level++;
+    client.setScore.run(score);
     switch (score.level) {
       case 1:
-        message.author.roles.add(config.role.beginner);
+        ajout_role(config.role.beginner, message);
+        level_up_message(client, message, "<@&831798215916519434>");
         break;
 
       case 2:
-        message.author.roles.remove(config.role.beginner);
-        message.author.roles.add(config.role.amateur);
+        supp_role(config.role.beginner, message);
+        ajout_role(config.role.amateur, message);
+        level_up_message(client, message, "<@&831798217322397716>");
         break;
 
       case 5:
-        message.author.roles.remove(config.role.amateur);
-        message.author.roles.add(config.role.skilled);
+        supp_role(config.role.amateur, message);
+        ajout_role(config.role.skilled, message);
+        level_up_message(client, message, "<@&831798219230281728>");
         break;
 
       case 10:
-        message.author.roles.remove(config.role.skilled);
-        message.author.roles.add(config.role.conqueror);
+        supp_role(config.role.skilled, message);
+        ajout_role(config.role.conqueror, message);
+        level_up_message(client, message, "<@&831798220823724033>");
         break;
 
       case 15:
-        message.author.roles.remove(config.role.conqueror);
-        message.author.roles.add(config.role.marechal);
+        supp_role(config.role.conqueror, message);
+        ajout_role(config.role.marechal, message);
+        level_up_message(client, message, "<@&840765286403407884>");
         break;
 
       case 20:
-        message.author.roles.remove(config.role.marechal);
-        message.author.roles.add(config.role.emperor);
+        supp_role(config.role.marechal, message);
+        ajout_role(config.role.emperor, message);
+        level_up_message(client, message, "<@&831798672211574865>");
         break;
 
       case 30:
-        message.author.roles.remove(config.role.emperor);
-        message.author.roles.add(config.role.ketaminator);
+        supp_role(config.role.emperor, message);
+        ajout_role(config.role.ketaminator, message);
+        level_up_message(client, message, "<@&831803492028645386>");
+        break;
+
+      default:
+        message.reply({
+          embeds: [
+            {
+              color: randomColor(),
+              description: `\`${message.member.user.tag}\`, tu as atteint le niveau \`${score.level}\` ! N'oublie pas de dab !`,
+            },
+          ],
+        });
         break;
     }
-    message.reply(
-      `\`\`\`xl\n'Tu as atteint le niveau \`**${curLevel}**\` ! N'oublie pas de dab !'\`\`\``
-    );
-  }
-
-  setScore.run(score);
+  } else { client.setScore.run(score); }
 }
 
-function score_give(message, client, getScore, args) {
-  // Limited to guild owner - adjust to your own preference!
+function score_give(message, args, client) {
   if (!message.author.id === "305032028947087360")
     return message.reply(
       "FDP, tu ne t'appelles pas " + message.guild.ownerId.name
@@ -86,14 +119,15 @@ function score_give(message, client, getScore, args) {
       "BG, tu dois mentionner quelqu'un ou donner son identité!"
     );
 
+  client.getScore = getScore_fct();
+  client.setScore = setScore_fct();
+
   const pointsToAdd = parseInt(args[1], 10);
   if (!pointsToAdd)
-    return message.reply("You didn't tell me how many points to give...");
+    return message.reply("Batard tu ne me donne pas de points");
 
-  // Get their current points.
-  let userScore = getScore.get(user.id, message.guild.id);
+  let userScore = client.getScore.get(user.id, message.guild.id);
 
-  // It's possible to give points to a user we haven't seen, so we need to initiate defaults here too!
   if (!userScore) {
     userScore = {
       id: `${message.guild.id}-${user.id}`,
@@ -105,26 +139,33 @@ function score_give(message, client, getScore, args) {
   }
   userScore.points += pointsToAdd;
 
-  // We also want to update their level (but we won't notify them if it changes)
-  let userLevel = Math.floor(0.1 * Math.sqrt(score.points));
+  let userLevel = Math.floor(0.2 * Math.sqrt(score.points));
   userScore.level = userLevel;
 
-  // And we save it!
   client.setScore.run(userScore);
 
   return message.channel.send(
-    `${user.tag} has received ${pointsToAdd} points and now stands at ${userScore.points} points.`
+    `${user.tag} a reçu ${pointsToAdd} points d'exp et mtn il a ${userScore.points} points.`
   );
 }
 
-function show_level(getScore, message, messageGuild) {
-  let score = getScore.get(message.author.id, messageGuild.id);
+function show_level(client, message) {
+  client.getScore = getScore_fct();
+
+  let score = client.getScore.get(message.author.id, message.guild.id);
+  let nextXPscore =
+    Math.pow(Math.floor(Number(score.level + 1) / 0.2), 2) - score.points;
   return message
-    .reply(
-      `Tu as actuellement ${score.points} points d'expérience et tu es niveau ${score.level}!`
-    )
+    .reply({
+      embeds: [
+        {
+          color: randomColor(),
+          description: `Tu as actuellement \`${score.points}\` points d'expérience et tu es niveau \`${score.level}\`!(Prochain niveau dans \`${nextXPscore}\` points d'exp)`,
+        },
+      ],
+    })
     .then((msg) => {
-      setTimeout(() => msg.delete(), 5000);
+      setTimeout(() => msg.delete(), 10000);
     });
 }
 
@@ -136,10 +177,8 @@ function top_rank(messageChannel, message, client, errorEmote, messageGuild) {
       )
       .all(messageGuild.id);
 
-    // Now shake it and show it! (as a nice embed, too!)
     const embed = new MessageEmbed()
-      .setTitle("TOP 10 DU SERVEUR")
-      .setAuthor(client.user.username, client.user.avatarURL())
+      .setDescription(`\`\`\`xl\n${config.emoji.queue} | 'TOP 10 DU SERVEUR' | ${config.emoji.queue}\`\`\``)
       .setColor(randomColor());
 
     for (const data of top10) {
