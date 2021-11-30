@@ -172,7 +172,7 @@ client.on("messageCreate", async (message) => {
           break;
         case "rank": case "top":
           if (message.channel.id === "833824151671930920") {
-            top_rank(message.channel.id, message, client, client.emotes.error);
+            top_rank(message.channel.id, message, client, client.emotes.error, message.guild);
           } else {
             wrong_channel_cmd1(message, client.emotes.error);
           }

@@ -1,5 +1,5 @@
-const { randomColor } = require('../fonctions/random_color');
-const { MessageEmbed } = require('discord.js')
+const { randomColor } = require("../fonctions/random_color");
+const { MessageEmbed } = require("discord.js");
 const SQLite = require("better-sqlite3");
 const sql = new SQLite("./scores.sqlite");
 const { getScore_fct, setScore_fct } = require("./tables");
@@ -24,8 +24,14 @@ async function ajout_role(RoleID, message) {
 }
 
 async function supp_role(RoleID, message) {
-  let role = message.guild.roles.cache.find((r) => r.id === RoleID);
-  message.member.roles.remove(role);
+  config.role.forEach(obj => {
+    Object.entries(obj).forEach(([value]) => {
+      if (message.member.roles.cache.some((role) => role.id === value)) {
+        let role = message.guild.roles.cache.find((r) => r.id === value);
+        message.member.roles.remove(role);
+      }
+    });
+  });
 }
 
 async function score_add(client, message) {
@@ -103,7 +109,9 @@ async function score_add(client, message) {
         });
         break;
     }
-  } else { client.setScore.run(score); }
+  } else {
+    client.setScore.run(score);
+  }
 }
 
 function score_give(message, args, client) {
@@ -123,8 +131,7 @@ function score_give(message, args, client) {
   client.setScore = setScore_fct();
 
   const pointsToAdd = parseInt(args[1], 10);
-  if (!pointsToAdd)
-    return message.reply("Batard tu ne me donne pas de points");
+  if (!pointsToAdd) return message.reply("Batard tu ne me donne pas de points");
 
   let userScore = client.getScore.get(user.id, message.guild.id);
 
@@ -178,7 +185,9 @@ function top_rank(messageChannel, message, client, errorEmote, messageGuild) {
       .all(messageGuild.id);
 
     const embed = new MessageEmbed()
-      .setDescription(`\`\`\`xl\n${config.emoji.queue} | 'TOP 10 DU SERVEUR' | ${config.emoji.queue}\`\`\``)
+      .setDescription(
+        `\`\`\`xl\n${config.emoji.queue} | 'TOP 10 DU SERVEUR' | ${config.emoji.queue}\`\`\``
+      )
       .setColor(randomColor());
 
     for (const data of top10) {
