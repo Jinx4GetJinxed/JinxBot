@@ -1,5 +1,5 @@
-const { randomColor } = require("../fonctions/random_color");
-const { MessageEmbed } = require("discord.js");
+const { randomColor } = require('../fonctions/random_color');
+const { MessageEmbed } = require('discord.js')
 const SQLite = require("better-sqlite3");
 const sql = new SQLite("./scores.sqlite");
 const { getScore_fct, setScore_fct } = require("./tables");
@@ -36,9 +36,9 @@ async function score_add(client, message) {
 
   if (!score) {
     score = {
-      id: `${message.guild.id}-${message.author.id}`,
+      id: `${messageGuild.id}-${message.author.id}`,
       user: message.author.id,
-      guild: message.guild.id,
+      guild: messageGuild.id,
       points: 0,
       level: 0,
     };
@@ -169,13 +169,13 @@ function show_level(client, message) {
     });
 }
 
-function top_rank(messageChannel, message, client, errorEmote) {
+function top_rank(messageChannel, message, client, errorEmote, messageGuild) {
   if (messageChannel === "833824151671930920") {
     const top10 = sql
       .prepare(
         "SELECT * FROM scores WHERE guild = ? ORDER BY points DESC LIMIT 10;"
       )
-      .all(message.guild.id);
+      .all(messageGuild.id);
 
     const embed = new MessageEmbed()
       .setDescription(`\`\`\`xl\n${config.emoji.queue} | 'TOP 10 DU SERVEUR' | ${config.emoji.queue}\`\`\``)
