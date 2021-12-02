@@ -4,8 +4,8 @@ module.exports = {
     name: "filter",
     aliases: ["filters"],
     inVoiceChannel: true,
-    run: async (client, message, args) => {
-        const queue = client.distube.getQueue(message)
+    run: async (client, Distube, message, args) => {
+        const queue = Distube.getQueue(message.guild.id)
         if (!queue)
             return message.channel.send({
                 embeds: [{
@@ -15,7 +15,7 @@ module.exports = {
             }).then(msg => { setTimeout(() => msg.delete(), 10000) })
         if (args[0] === "off" && queue.filters?.length)
             queue.setFilter(false)
-        else if (Object.keys(client.distube.filters).includes(args[0]))
+        else if (Object.keys(Distube.filters).includes(args[0]))
             queue.setFilter(args[0])
         else if (args[0])
             return message.channel.send({

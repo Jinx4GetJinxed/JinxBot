@@ -197,7 +197,8 @@ client.on("messageCreate", async (message) => {
           client.commands,
           client.aliases,
           client.emotes.error,
-          client
+          client, 
+          client.distube
         );
       } else {
         wrong_channel_cmd(message, client.emotes.error);

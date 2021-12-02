@@ -4,7 +4,7 @@ const { randomColor } = require("../fonctions/random_color")
 module.exports = {
     name: "help",
     aliases: ["h", "cmd", "command"],
-    run: async (client, message, args) => {
+    run: async (client, Distube, message, args) => {
         const embed = new MessageEmbed()
             .setColor(randomColor())
             .setTitle("Commandes pour la musique\n")

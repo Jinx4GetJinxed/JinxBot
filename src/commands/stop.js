@@ -4,8 +4,8 @@ module.exports = {
     name: "stop",
     aliases: ["dc", "disconnect", "leave"],
     inVoiceChannel: true,
-    run: async (client, message, args) => {
-        const queue = client.distube.getQueue(message)
+    run: async (client, Distube, message, args) => {
+        const queue = Distube.getQueue(message.guild.id)
         if (!queue)
             return message.channel.send({
                 embeds: [{

@@ -4,7 +4,7 @@ module.exports = {
     name: "play",
     aliases: ["p", "play"],
     inVoiceChannel: true,
-    run: async (client, message, args) => {
+    run: async (client, Distube, message, args) => {
         const string = args.join(" ")
         if (!string)
             return message.channel.send({
@@ -14,7 +14,7 @@ module.exports = {
                 }]
             }).then(msg => { setTimeout(() => msg.delete(), 10000) })
         try {
-            client.distube.play(message, string)
+            Distube.play(message, string)
         } catch (e) {
             message.channel.send({
                 embeds: [{
