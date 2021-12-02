@@ -12,7 +12,7 @@ async function level_up_message(client, message, level) {
     embeds: [
       {
         color: randomColor(),
-        description: `\`${message.member.user.tag}\`, tu as atteint le niveau \`${score.level}\` et tu viens de passer au rang ${level} !!!`,
+        description: `\`${message.member.user.name}\`, tu as atteint le niveau \`${score.level}\` et tu viens de passer au rang ${level} !!!`,
       },
     ],
   });
@@ -24,17 +24,17 @@ async function ajout_role(RoleID, message) {
 }
 
 async function supp_role(RoleID, message) {
-  config.role.forEach(obj => {
-    Object.entries(obj).forEach(([value]) => {
-      if (message.member.roles.cache.some((role) => role.id === value)) {
-        let role = message.guild.roles.cache.find((r) => r.id === value);
+  for (var key in config.role) {
+    if (config.role.hasOwnProperty(key)) {
+      if (message.member.roles.cache.some((role) => role.id === config.role[key])) {
+        let role = message.guild.roles.cache.find((r) => r.id === config.role[key]);
         message.member.roles.remove(role);
       }
-    });
-  });
+    }
+  }
 }
 
-async function score_add(client, message) {
+async function score_add(client, message, messageGuild) {
   client.getScore = getScore_fct();
   client.setScore = setScore_fct();
 
@@ -50,49 +50,94 @@ async function score_add(client, message) {
     };
   }
 
-  score.points += Math.floor(Math.random() * 5) + 1;
+  score.points += Math.floor(Math.random() * 10) + 1;
   const curLevel = Math.floor(0.2 * Math.sqrt(score.points));
+  var curLevelRound = parseInt(curLevel, 10);
+  console.log(curLevelRound)
+
+  switch (true) {
+    case curLevelRound=1:
+      ajout_role(config.role.beginner, message);
+      level_up_message(client, message, "<@&831798215916519434>");
+      break;
+
+    case curLevelRound<=2:
+      supp_role(config.role.beginner, message);
+      ajout_role(config.role.amateur, message);
+      level_up_message(client, message, "<@&831798217322397716>");
+      break;
+
+    case curLevelRound<=5:
+      supp_role(config.role.amateur, message);
+      ajout_role(config.role.skilled, message);
+      level_up_message(client, message, "<@&831798219230281728>");
+      break;
+
+    case curLevelRound<=10:
+      supp_role(config.role.skilled, message);
+      ajout_role(config.role.conqueror, message);
+      level_up_message(client, message, "<@&831798220823724033>");
+      break;
+
+    case curLevelRound<=15:
+      supp_role(config.role.conqueror, message);
+      ajout_role(config.role.marechal, message);
+      level_up_message(client, message, "<@&840765286403407884>");
+      break;
+
+    case curLevelRound<=20:
+      supp_role(config.role.marechal, message);
+      ajout_role(config.role.emperor, message);
+      level_up_message(client, message, "<@&831798672211574865>");
+      break;
+
+    case curLevelRound<=30:
+      supp_role(config.role.emperor, message);
+      ajout_role(config.role.ketaminator, message);
+      level_up_message(client, message, "<@&831803492028645386>");
+      break;
+  }
 
   if (score.level < curLevel) {
     score.level++;
     client.setScore.run(score);
-    switch (score.level) {
-      case 1:
+    switch (true) {
+      case score.level=1:
         ajout_role(config.role.beginner, message);
         level_up_message(client, message, "<@&831798215916519434>");
         break;
 
-      case 2:
+      case score.level=2:
         supp_role(config.role.beginner, message);
         ajout_role(config.role.amateur, message);
         level_up_message(client, message, "<@&831798217322397716>");
         break;
 
-      case 5:
+      case score.level<=5:
         supp_role(config.role.amateur, message);
         ajout_role(config.role.skilled, message);
         level_up_message(client, message, "<@&831798219230281728>");
         break;
 
-      case 10:
+      case score.level<=10:
         supp_role(config.role.skilled, message);
         ajout_role(config.role.conqueror, message);
         level_up_message(client, message, "<@&831798220823724033>");
         break;
 
-      case 15:
+      case score.level<=15:
         supp_role(config.role.conqueror, message);
         ajout_role(config.role.marechal, message);
         level_up_message(client, message, "<@&840765286403407884>");
         break;
 
-      case 20:
+      case score.level<=20:
         supp_role(config.role.marechal, message);
         ajout_role(config.role.emperor, message);
         level_up_message(client, message, "<@&831798672211574865>");
         break;
 
-      case 30:
+      case score.level<=30:
         supp_role(config.role.emperor, message);
         ajout_role(config.role.ketaminator, message);
         level_up_message(client, message, "<@&831803492028645386>");
@@ -103,7 +148,7 @@ async function score_add(client, message) {
           embeds: [
             {
               color: randomColor(),
-              description: `\`${message.member.user.tag}\`, tu as atteint le niveau \`${score.level}\` ! N'oublie pas de dab !`,
+              description: `\`${message.member.name}\`, tu as atteint le niveau \`${score.level}\` ! N'oublie pas de dab !`,
             },
           ],
         });
@@ -114,14 +159,14 @@ async function score_add(client, message) {
   }
 }
 
-function score_give(message, args, client) {
+function score_give(message, client, args) {
   if (!message.author.id === "305032028947087360")
     return message.reply(
       "FDP, tu ne t'appelles pas " + message.guild.ownerId.name
     );
 
   const user =
-    message.mentions.users.first() || client.users.cache.get(args[0]);
+    message.mentions.users.first() || client.users.cache.get(args);
   if (!user)
     return message.reply(
       "BG, tu dois mentionner quelqu'un ou donner son identité!"
@@ -146,7 +191,7 @@ function score_give(message, args, client) {
   }
   userScore.points += pointsToAdd;
 
-  let userLevel = Math.floor(0.2 * Math.sqrt(score.points));
+  let userLevel = Math.floor(0.2 * Math.sqrt(userScore.points));
   userScore.level = userLevel;
 
   client.setScore.run(userScore);

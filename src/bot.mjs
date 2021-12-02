@@ -110,7 +110,7 @@ client.on("guildMemberRemove", async (member) => {
 
 client.on("messageCreate", async (message) => {
   if (message.author.bot || !message.guild) return;
-  score_add(client, message);
+  score_add(client, message, message.guild);
 
   const [CMD_NAME, ...args] = message.content
     .trim()
@@ -162,7 +162,7 @@ client.on("messageCreate", async (message) => {
         case "give":
           if (message.member.permissions.has("ADMINISTRATOR")) {
             if (message.channel.id === "833824151671930920") {
-              score_give(message, client, client.getScore, args);
+              score_give(message, client, args);
             } else {
               wrong_channel_cmd1(message, client.emotes.error);
             }
