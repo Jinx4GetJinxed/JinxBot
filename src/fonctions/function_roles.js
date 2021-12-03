@@ -173,7 +173,7 @@ async function partialMessage(reaction) {
 
 async function msgAddReaction(reaction) {
   console.log(
-    `le message de ${reaction.message.author} a gagné une nouvelle réaction nommée " ${reaction.emoji.name} "`
+    `le message de ${reaction.member} a gagné une nouvelle réaction nommée " ${reaction.emoji.name} "`
   );
   console.log(`${reaction.count} utilisateur(s) ont réagi à ce message`);
 }

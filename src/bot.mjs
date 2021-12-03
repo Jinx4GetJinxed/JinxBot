@@ -37,6 +37,7 @@ import { remove_points, score_add, score_give, show_level, top_rank } from "./le
  * @import "fs"
  */
 import { createRequire } from "module";
+import { log_member_add, log_member_remove } from "./logs/log_member.js";
 const require = createRequire(import.meta.url);
 const config = require("./config.json");
 const fs = require("fs");
@@ -102,10 +103,12 @@ client.on("ready", () => {
 
 client.on("guildMemberAdd", async (member) => {
   add_membre(member, client);
+  log_member_add(client, member)
 });
 
 client.on("guildMemberRemove", async (member) => {
   supp_membre(member, client);
+  log_member_remove(client, member)
 });
 
 client.on("messageCreate", async (message) => {
