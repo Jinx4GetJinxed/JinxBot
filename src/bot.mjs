@@ -29,7 +29,7 @@ import { message_distube } from "./message_distube.js/main_message.js";
  * @import "../src/level"
  */
 import { table_prep, create_table } from "./level/tables.js";
-import { score_add, score_give, show_level, top_rank } from "./level/score.js";
+import { remove_points, score_add, score_give, show_level, top_rank } from "./level/score.js";
 /**
  * @import "module"
  * @import "./config.json"
@@ -170,6 +170,19 @@ client.on("messageCreate", async (message) => {
             not_allowed_cmd(message, client.emotes.error);
           }
           break;
+
+          case "remove":
+            if (message.member.permissions.has("ADMINISTRATOR")) {
+              if (message.channel.id === "833824151671930920") {
+                remove_points(message, client, args);
+              } else {
+                wrong_channel_cmd1(message, client.emotes.error);
+              }
+            } else {
+              not_allowed_cmd(message, client.emotes.error);
+            }
+            break;
+
         case "rank": case "top":
           if (message.channel.id === "833824151671930920") {
             top_rank(message.channel.id, message, client, client.emotes.error, message.guild);
