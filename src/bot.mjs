@@ -37,7 +37,7 @@ import { remove_points, score_add, score_give, show_level, top_rank } from "./le
  * @import "fs"
  */
 import { createRequire } from "module";
-import { log_member_add, log_member_remove } from "./logs/log_member.js";
+import { log_member_add, log_member_ban_add, log_member_ban_remove, log_member_kick, log_member_remove } from "./logs/log_member.js";
 const require = createRequire(import.meta.url);
 const config = require("./config.json");
 const fs = require("fs");
@@ -47,6 +47,7 @@ const fs = require("fs");
 const client = new Client({
   intents: [
     Intents.FLAGS.GUILDS,
+    Intents.FLAGS.GUILD_BANS,
     Intents.FLAGS.GUILD_MESSAGES,
     Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
     Intents.FLAGS.GUILD_VOICE_STATES,
@@ -108,7 +109,12 @@ client.on("guildMemberAdd", async (member) => {
 
 client.on("guildMemberRemove", async (member) => {
   supp_membre(member, client);
-  log_member_remove(client, member)
+  log_member_kick(client, member)
+    .then((rateable) => {
+      if (rateable === undefined) {
+        log_member_remove(client, member)
+      }
+    })
 });
 
 client.on("messageCreate", async (message) => {
@@ -174,17 +180,17 @@ client.on("messageCreate", async (message) => {
           }
           break;
 
-          case "remove":
-            if (message.member.permissions.has("ADMINISTRATOR")) {
-              if (message.channel.id === "833824151671930920") {
-                remove_points(message, client, args);
-              } else {
-                wrong_channel_cmd1(message, client.emotes.error);
-              }
+        case "remove":
+          if (message.member.permissions.has("ADMINISTRATOR")) {
+            if (message.channel.id === "833824151671930920") {
+              remove_points(message, client, args);
             } else {
-              not_allowed_cmd(message, client.emotes.error);
+              wrong_channel_cmd1(message, client.emotes.error);
             }
-            break;
+          } else {
+            not_allowed_cmd(message, client.emotes.error);
+          }
+          break;
 
         case "rank": case "top":
           if (message.channel.id === "833824151671930920") {
@@ -213,7 +219,7 @@ client.on("messageCreate", async (message) => {
           client.commands,
           client.aliases,
           client.emotes.error,
-          client, 
+          client,
           client.distube
         );
       } else {
@@ -246,6 +252,14 @@ client.on("messageReactionRemove", async (reaction, user) => {
     roleRemove(reaction, user);
   }
 });
+
+client.on("guildBanAdd", member => {
+  log_member_ban_add(client, member)
+})
+
+client.on("guildBanRemove", member => {
+  log_member_ban_remove(client, member)
+})
 
 message_distube(client.distube, client.emotes);
 
