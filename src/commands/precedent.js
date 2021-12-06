@@ -3,8 +3,8 @@ const { randomColor } = require("../fonctions/random_color")
 module.exports = {
     name: "previous",
     inVoiceChannel: true,
-    run: async (client, message, args) => {
-        const queue = client.distube.getQueue(message)
+    run: async (client, Distube, message, args) => {
+        const queue = Distube.getQueue(message.guild.id)
         if (!queue)
             return message.channel.send({
                 embeds: [{
@@ -17,7 +17,7 @@ module.exports = {
             message.channel.send({
                 embeds: [{
                     color: randomColor(),
-                    description: `\`\`\`xl\n${client.emotes.success} | 'Retourné! En cours de lecture:'\`\`\` \`${song.name}\``
+                    description: `\`\`\`xl\n${client.emotes.success} | 'Retourné!'`
                 }]
             })
         } catch (e) {

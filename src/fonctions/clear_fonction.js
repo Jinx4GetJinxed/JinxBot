@@ -49,7 +49,7 @@ async function clear_command(message, args) {
         ? 101
         : Number(args);
 
-    message.channel.bulkDelete(amount).then((messages) => message.channel
+    message.channel.bulkDelete(amount, true).then((messages) => message.channel
         .send({
             embeds: [
                 {

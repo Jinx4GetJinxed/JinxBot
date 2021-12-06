@@ -3,8 +3,8 @@ const { randomColor } = require("../fonctions/random_color")
 module.exports = {
     name: "queue",
     aliases: ["q","queue"],
-    run: async (client, message, args) => {
-        const queue = client.distube.getQueue(message)
+    run: async (client, Distube, message, args) => {
+        const queue = Distube.getQueue(message.guild.id)
         if (!queue)
             return message.channel.send({
                 embeds: [{
