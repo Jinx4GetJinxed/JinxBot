@@ -38,6 +38,7 @@ import { remove_points, score_add, score_give, show_level, top_rank } from "./le
  */
 import { createRequire } from "module";
 import { log_member_add, log_member_ban_add, log_member_ban_remove, log_member_kick, log_member_remove } from "./logs/log_member.js";
+import { log_message_delete } from "./logs/log_message.js";
 const require = createRequire(import.meta.url);
 const config = require("./config.json");
 const fs = require("fs");
@@ -236,6 +237,10 @@ client.on("messageCreate", async (message) => {
       break;
   }
 });
+
+client.on('messageDelete', message => {
+  log_message_delete(client, message)
+})
 
 client.on("messageReactionAdd", async (reaction, user) => {
   partialMessage(reaction);

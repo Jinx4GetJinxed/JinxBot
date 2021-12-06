@@ -2,15 +2,15 @@ function log_channel(client, num) {
 
 	switch (num) {
 		case 1:
-			return client.channels.cache.find(channel => channel.name === "😈-🇧🇮🇪🇳🇻🇪🇳🇺-😧")
+			return client.channels.cache.find(channel => channel.name === "🄱🄸🄴🄽🅅🄴🄽🅄")
 			break;
 
 		case 2:
-			return client.channels.cache.find(channel => channel.name === "🇰🇮🇨🇰")
+			return client.channels.cache.find(channel => channel.name === "🄺🄸🄲🄺")
 			break;
 
 		case 3:
-			return client.channels.cache.find(channel => channel.name === "🇧🇦🇳")
+			return client.channels.cache.find(channel => channel.name === "🅱🅰🅽")
 			break;
 	}
 }
