@@ -238,7 +238,7 @@ client.on("messageCreate", async (message) => {
   }
 });
 
-client.on('messageDelete', message => {
+client.on('messageDelete', async message => {
   log_message_delete(client, message)
 })
 
