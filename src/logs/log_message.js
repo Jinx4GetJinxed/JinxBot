@@ -19,6 +19,7 @@ async function log_message_delete(client, message) {
   }
 
   if (message.author.bot || !message.guild) return;
+  if(message.content.toLowerCase().startsWith("jinx!")||message.content.toLowerCase().startsWith("powder!")) return;
   const channel = log_channel_message(client, 1);
   return channel.send({
     embeds: [
