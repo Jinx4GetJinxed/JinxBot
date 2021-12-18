@@ -18,7 +18,7 @@ module.exports = {
             message.channel.send({
                 embeds: [{
                     color: randomColor(),
-                    description: `\`\`\`xl\n${client.emotes.success} | 'Sauté !`
+                    description: `\`\`\`xl\n${client.emotes.success} | 'Sauté !'\`\`\``
                 }]
             })
         } catch (e) {
