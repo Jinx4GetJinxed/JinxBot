@@ -22,7 +22,7 @@
     "asynckit": "^0.4.0",
     "better-sqlite3": "^7.4.5",
     "discord.js": "^13.2.0",
-    "distube": "^3.0.1",
+    "distube": "^3.0.4",
     "dotenv": "^10.0.0",
     "ffmpeg-static": "^4.4.0",
     "libsodium-wrappers": "^0.7.9",
