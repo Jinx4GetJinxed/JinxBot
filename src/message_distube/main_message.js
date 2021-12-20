@@ -90,16 +90,16 @@ function message_distube(Distube, Emotes) {
       });
       console.error(e);
     })
-    .on("empty", (message) =>
-      message.channel.send({
+    .on("empty", (message) => {
+      Distube.channel.send({
         embeds: [
           {
             color: randomColor(),
             description: `\`\`\`xl\n'Le canal vocal est vide donc je le quitte !'\`\`\``,
           },
         ],
-      })
-    )
+      });
+    })
     .on("searchNoResult", (message) =>
       message.channel.send({
         embeds: [
