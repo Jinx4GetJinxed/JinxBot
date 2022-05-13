@@ -1,38 +1,41 @@
 {
-  "name": "jinx_bot",
-  "version": "1.0.0",
-  "description": "",
-  "engines": {
-    "node": "16.11.0"
-  },
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./src/bot.mjs",
-    "dev": "nodemon ./src/bot.mjs"
-  },
-  "keywords": [],
-  "author": "Jinx4GetJinxed",
-  "license": "ISC",
-  "dependencies": {
-    "@discordjs/voice": "^0.7.2",
-    "@distube/soundcloud": "^1.0.0",
-    "@distube/spotify": "^1.0.0",
-    "ansi-regex": ">=5.0.1",
-    "asynckit": "^0.4.0",
-    "better-sqlite3": "^7.4.5",
-    "discord.js": "^13.2.0",
-    "distube": "^3.0.4",
-    "dotenv": "^10.0.0",
-    "ffmpeg-static": "^4.4.0",
-    "libsodium-wrappers": "^0.7.9",
-    "mode": "^0.3.2",
-    "mongoose": "^6.0.12",
-    "node-opus": "^0.3.3",
-    "nodemon": "^2.0.14",
-    "opusscript": "^0.0.8"
-  },
-  "devDependencies": {
-    "typescript": "^4.4.3"
-  }
+    "name": "jinx_bot",
+    "version": "1.0.0",
+    "description": "",
+    "engines": {
+        "node": "16.11.0"
+    },
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node ./src/bot.mjs",
+        "dev": "nodemon ./src/bot.mjs"
+    },
+    "keywords": [],
+    "author": "Jinx4GetJinxed",
+    "license": "ISC",
+    "dependencies": {
+        "@discordjs/opus": "0.7.0",
+        "@discordjs/voice": "^0.7.2",
+        "@distube/soundcloud": "^1.0.0",
+        "@distube/spotify": "^1.0.0",
+        "@distube/yt-dlp": "^1.0.2",
+        "ansi-regex": ">=5.0.1",
+        "asynckit": "^0.4.0",
+        "better-sqlite3": "^7.4.5",
+        "discord-api-types": "^0.32.1",
+        "discord.js": "^13.2.0",
+        "distube": "^3.3.4",
+        "dotenv": "^10.0.0",
+        "ffmpeg-static": "^4.4.0",
+        "formidable": "^2.0.1",
+        "libsodium-wrappers": "^0.7.9",
+        "mode": "^0.3.2",
+        "mongoose": "^6.0.12",
+        "nodemon": "^2.0.16",
+        "opusscript": "^0.0.8"
+    },
+    "devDependencies": {
+        "typescript": "^4.4.3"
+    }
 }
