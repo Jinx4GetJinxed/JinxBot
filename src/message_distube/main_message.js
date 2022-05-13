@@ -1,33 +1,36 @@
-const { randomColor } = require("../fonctions/random_color")
+const { randomColor } = require("../fonctions/random_color");
 
 function message_distube(Distube, Emotes) {
   const statut = (queue) =>
-    `Volume: \`${queue.volume}%\` | Filtre: \`${queue.filters.join(", ") || "Non"
-    }\` | Boucle: \`${queue.repeatMode
-      ? queue.repeatMode === 2
-        ? "Toute la file d'attente"
-        : "Cette Musique"
-      : "Non"
+    `Volume: \`${queue.volume}%\` | Filtre: \`${
+      queue.filters.join(", ") || "Non"
+    }\` | Boucle: \`${
+      queue.repeatMode
+        ? queue.repeatMode === 2
+          ? "Toute la file d'attente"
+          : "Cette Musique"
+        : "Non"
     }\` | Lecture automatique: \`${queue.autoplay ? "Oui" : "Non"}\``;
-  Distube
-    .on("playSong", (queue, song) =>
-      queue.textChannel.send({
-        embeds: [
-          {
-            color: randomColor(),
-            description: `\`\`\`xl\n${Emotes.play} | 'Lecture:'\`\`\` \`${song.name}\` - \`${song.formattedDuration}\``,
-          },
-        ],
-      })
-    )
+  Distube.on("playSong", (queue, song) =>
+    queue.textChannel.send({
+      embeds: [
+        {
+          color: randomColor(),
+          description: `\`\`\`xl\n${Emotes.play} | 'Lecture:'\`\`\` \`${song.name}\` - \`${song.formattedDuration}\``,
+        },
+      ],
+    })
+  )
     .on("addSong", (queue, song) =>
       queue.textChannel.send({
         embeds: [
           {
             color: randomColor(),
-            description: `\`\`\`xl\n${Emotes.success
-              } | 'Ajout de la musique:'\`\`\` \`${song.name}\` - \`${song.formattedDuration
-              }\` à la file d'attente par ${song.user}\n${statut(queue)}`,
+            description: `\`\`\`xl\n${
+              Emotes.success
+            } | 'Ajout de la musique:'\`\`\` \`${song.name}\` - \`${
+              song.formattedDuration
+            }\` à la file d'attente par ${song.user}\n${statut(queue)}`,
           },
         ],
       })
@@ -37,9 +40,11 @@ function message_distube(Distube, Emotes) {
         embeds: [
           {
             color: randomColor(),
-            description: `\`\`\`xl\n${Emotes.success
-              } | 'Ajout de la playlist:'\`\`\` \`${playlist.name}\` (${playlist.songs.length
-              } musiques) à la file d'attente\n${statut(queue)}`,
+            description: `\`\`\`xl\n${
+              Emotes.success
+            } | 'Ajout de la playlist:'\`\`\` \`${playlist.name}\` (${
+              playlist.songs.length
+            } musiques) à la file d'attente\n${statut(queue)}`,
           },
         ],
       })
@@ -85,16 +90,16 @@ function message_distube(Distube, Emotes) {
       });
       console.error(e);
     })
-    .on("empty", (message) =>
-      message.channel.send({
+    .on("empty", (message) => {
+      Distube.channel.send({
         embeds: [
           {
             color: randomColor(),
             description: `\`\`\`xl\n'Le canal vocal est vide donc je le quitte !'\`\`\``,
           },
         ],
-      })
-    )
+      });
+    })
     .on("searchNoResult", (message) =>
       message.channel.send({
         embeds: [
@@ -117,4 +122,4 @@ function message_distube(Distube, Emotes) {
     );
 }
 
-module.exports = { message_distube }
+module.exports = { message_distube };

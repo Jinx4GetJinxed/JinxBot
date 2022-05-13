@@ -12,7 +12,7 @@ async function level_up_message(client, message, level) {
     embeds: [
       {
         color: randomColor(),
-        description: `\`${message.guild.member.name}\`, tu as atteint le niveau \`${score.level}\` et tu viens de passer au rang ${level} !!!`,
+        description: `\`${message.member.user.tag}\`, tu as atteint le niveau \`${score.level}\` et tu viens de passer au rang ${level} !!!`,
       },
     ],
   });
