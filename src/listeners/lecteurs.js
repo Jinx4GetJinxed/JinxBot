@@ -22,6 +22,7 @@ const distube = new DisTube(client, {
     youtubeDL: false,
     plugins: [new YtDlpPlugin()],
 });
+
 const { default: SpotifyPlugin } = require("@distube/spotify");
 const { default: SoundCloudPlugin } = require("@distube/soundcloud");
 const { message_distube } = require("../message_distube/main_message")
