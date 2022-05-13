@@ -18,15 +18,11 @@ const {
 } = require("../fonctions/function_roles");
 
 const { DisTube } = require("distube");
-const { YtDlpPlugin } = require("@distube/yt-dlp");
-const distube = new DisTube(client, {
-    youtubeDL: false,
-    plugins: [new YtDlpPlugin()],
-});
 
 const { default: SpotifyPlugin } = require("@distube/spotify");
 const { default: SoundCloudPlugin } = require("@distube/soundcloud");
 const { message_distube } = require("../message_distube/main_message")
+const { YtDlpPlugin } = require("@distube/yt-dlp");
 const config = require("../config.json");
 const fs = require("fs");
 const client = new Client({
@@ -44,7 +40,8 @@ const client = new Client({
 
 client.distube = new DisTube(client, {
     emitNewSongOnly: true,
-    plugins: [new SpotifyPlugin(), new SoundCloudPlugin()],
+    youtubeDL: false,
+    plugins: [new SpotifyPlugin(), new SoundCloudPlugin(), new YtDlpPlugin()],
 });
 client.commands = new Collection();
 client.aliases = new Collection();
