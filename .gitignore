@@ -3,4 +3,8 @@
 .env.local
 .env.*.local
 
+.sqlite-shm
+.sqlite-wal
+.sqlite
+
 node_modules/better-sqlite3
