@@ -260,8 +260,8 @@ function show_level_member(client, message, args) {
             embeds: [{
                 color: randomColor(),
                 title: `Affichage du niveau de \`${user.tag}\``,
-                description: "```diff\nPoints: " + score.points + " exp,\u200BNiveau: " + score.level +
-                    " !\u200B(Prochain niveau dans " + nextXPscore + " points d'exp)```",
+                description: "```diff\nPoints: " + score.points + " exp,\nNiveau: " + score.level +
+                    " !\n(Prochain niveau dans " + nextXPscore + " points d'exp)```",
             }, ],
         })
         .then((msg) => {
