@@ -231,12 +231,12 @@ function show_level(client, message) {
 
     return message
         .reply({
-            embeds: {
+            embeds: [{
                 color: randomColor(),
-                title: `Affichage du niveau de \`${user.tag}\``,
+                title: `Affichage du niveau de \`${message.author.tag}\``,
                 description: "```diff\nPoints: " + score.points + " exp,\u200BNiveau: " + score.level +
                     " !\u200B(Prochain niveau dans " + nextXPscore + " points d'exp)```",
-            },
+            }, ],
         })
         .then((msg) => {
             setTimeout(() => msg.delete(), 10000);
@@ -244,11 +244,6 @@ function show_level(client, message) {
 }
 
 function show_level_member(client, message, args) {
-    if (!message.author.id === "305032028947087360")
-        return message.reply(
-            "FDP, tu ne t'appelles pas " + message.guild.ownerId.name
-        );
-
     const user = message.mentions.users.first() || client.users.cache.get(args);
     if (!user)
         return message.reply(
@@ -264,8 +259,9 @@ function show_level_member(client, message, args) {
         .reply({
             embeds: [{
                 color: randomColor(),
-                title,
-                description: `\`${user.id}\` a actuellement \`${score.points}\` points d'expérience et tu es niveau \`${score.level}\`!(Prochain niveau dans \`${nextXPscore}\` points d'exp)`,
+                title: `Affichage du niveau de \`${user.tag}\``,
+                description: "```diff\nPoints: " + score.points + " exp,\u200BNiveau: " + score.level +
+                    " !\u200B(Prochain niveau dans " + nextXPscore + " points d'exp)```",
             }, ],
         })
         .then((msg) => {
