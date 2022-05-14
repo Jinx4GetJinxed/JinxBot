@@ -5,12 +5,10 @@ async function clear_command(message, args) {
     if (!message.member.permissions.has('ADMINISTRATOR')) {
         return message.channel
             .send({
-                embeds: [
-                    {
-                        color: randomColor(),
-                        description: `\`\`\`py\n${config.emoji.error} | "Tu ne peux pas faire cette commande, tu n'es pas un admin"\`\`\``,
-                    },
-                ],
+                embeds: [{
+                    color: randomColor(),
+                    description: `\`\`\`py\n${config.emoji.error} | "Tu ne peux pas faire cette commande, tu n'es pas un admin"\`\`\``,
+                }, ],
             })
             .then((msg) => {
                 setTimeout(() => msg.delete(), 5000);
@@ -19,12 +17,10 @@ async function clear_command(message, args) {
 
     if (isNaN(args)) {
         return message.channel.send({
-            embeds: [
-                {
-                    color: randomColor(),
-                    description: `\`\`\`xl\n${config.emoji.error} | 'Je dois delete combien de message?'\`\`\``,
-                },
-            ],
+            embeds: [{
+                color: randomColor(),
+                description: `\`\`\`xl\n${config.emoji.error} | 'Je dois delete combien de message?'\`\`\``,
+            }, ],
         }).then((msg) => {
             setTimeout(() => msg.delete(), 5000);
         })
@@ -33,31 +29,27 @@ async function clear_command(message, args) {
     if (Number(args) < 0) {
         return message.channel
             .send({
-                embeds: [
-                    {
-                        color: randomColor(),
-                        description: `\`\`\`xl\n${config.emoji.error} | 'Entre un chiffre positif chacal'\`\`\``,
-                    },
-                ],
+                embeds: [{
+                    color: randomColor(),
+                    description: `\`\`\`xl\n${config.emoji.error} | 'Entre un chiffre positif chacal'\`\`\``,
+                }, ],
             })
             .then((msg) => {
                 setTimeout(() => msg.delete(), 5000);
             })
     }
 
-    const amount = Number(args) > 200
-        ? 101
-        : Number(args);
+    const amount = Number(args) > 200 ?
+        101 :
+        Number(args);
 
     message.channel.bulkDelete(amount, true).then((messages) => message.channel
-        .send({
-            embeds: [
-                {
+            .send({
+                embeds: [{
                     color: randomColor(),
                     description: `\`\`\`py\n${config.emoji.success} | "J'ai supprimé ${messages.size} message(s)"\`\`\``,
-                },
-            ],
-        }))
+                }, ],
+            }))
         .then((msg) => {
             setTimeout(() => msg.delete(), 5000);
         })
