@@ -79,10 +79,10 @@ async function creationMessage(client, message) {
 
                 case "level":
                     if (message.channel.id === "833824151671930920") {
-                        if (args == null) {
-                            show_level(client, message);
-                        } else if (args != null) {
+                        if (args != null) {
                             show_level_member(client, message, args)
+                        } else {
+                            show_level(client, message);
                         }
                     } else {
                         wrong_channel_cmd1(message, client.emotes.error);
