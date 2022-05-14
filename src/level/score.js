@@ -231,12 +231,12 @@ function show_level(client, message) {
 
     return message
         .reply({
-            embeds: [{
+            embeds: {
                 color: randomColor(),
                 title: `Affichage du niveau de \`${user.tag}\``,
                 description: "```diff\nPoints: " + score.points + " exp,\u200BNiveau: " + score.level +
                     " !\u200B(Prochain niveau dans " + nextXPscore + " points d'exp)```",
-            }, ],
+            },
         })
         .then((msg) => {
             setTimeout(() => msg.delete(), 10000);
