@@ -1,8 +1,27 @@
-const { score_add, show_level, score_give, remove_points, top_rank } = require("../level/score");
+const {
+    score_add,
+    show_level,
+    score_give,
+    remove_points,
+    top_rank,
+    show_level_member,
+} = require("../level/score");
 const { clear_command } = require("./clear_fonction");
-const { Consignes1, Consignes2, Consignes3, Consignes4, Consignes5 } = require("./consignes_function");
+const {
+    Consignes1,
+    Consignes2,
+    Consignes3,
+    Consignes4,
+    Consignes5,
+} = require("./consignes_function");
 const { run_command } = require("./lecture_commands");
-const { not_allowed_cmd, kick_id, ban_id, wrong_channel_cmd1, no_cmd } = require("./moderator_function");
+const {
+    not_allowed_cmd,
+    kick_id,
+    ban_id,
+    wrong_channel_cmd1,
+    no_cmd,
+} = require("./moderator_function");
 const config = require("../config.json");
 
 const PREFIX = "jinx!";
@@ -60,7 +79,11 @@ async function creationMessage(client, message) {
 
                 case "level":
                     if (message.channel.id === "833824151671930920") {
-                        show_level(client, message);
+                        if (args == null) {
+                            show_level(client, message);
+                        } else if (args != null) {
+                            show_level_member(client, message, args)
+                        }
                     } else {
                         wrong_channel_cmd1(message, client.emotes.error);
                     }
