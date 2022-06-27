@@ -30,7 +30,7 @@
         "formidable": "^2.0.1",
         "libsodium-wrappers": "^0.7.9",
         "mongoose": "^6.0.12",
-        "nodemon": "^2.0.16",
+        "nodemon": "^2.0.17",
         "opusscript": "^0.0.8"
     },
     "devDependencies": {
