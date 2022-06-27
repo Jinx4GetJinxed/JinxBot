@@ -27,7 +27,7 @@
         "distube": "^3.3.4",
         "dotenv": "^10.0.0",
         "ffmpeg-static": "^4.4.0",
-        "formidable": "^2.0.1",
+        "formidable": "^3.2.4",
         "libsodium-wrappers": "^0.7.9",
         "mongoose": "^6.0.12",
         "nodemon": "^2.0.17",
