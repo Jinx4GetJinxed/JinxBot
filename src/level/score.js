@@ -234,8 +234,13 @@ function show_level(client, message) {
             embeds: [{
                 color: randomColor(),
                 title: `Affichage du niveau de \`${message.author.tag}\``,
-                description: "```diff\nPoints: " + score.points + " exp,\u200BNiveau: " + score.level +
-                    " !\u200B(Prochain niveau dans " + nextXPscore + " points d'exp)```",
+                description: "```diff\nPoints: " +
+                    score.points +
+                    " exp,\u200BNiveau: " +
+                    score.level +
+                    " !\u200B(Prochain niveau dans " +
+                    nextXPscore +
+                    " points d'exp)```",
             }, ],
         })
         .then((msg) => {
@@ -259,14 +264,28 @@ function show_level_member(client, message, args) {
         .reply({
             embeds: [{
                 color: randomColor(),
-                title: `Affichage du niveau de \`${user.tag}\``,
-                description: "```diff\nPoints: " + score.points + " exp,\nNiveau: " + score.level +
-                    " !\n(Prochain niveau dans " + nextXPscore + " points d'exp)```",
-            }, ],
+                author: {
+                    icon_url: user.displayAvatarURL(),
+                },
+                description: `𝙵𝚒𝚌𝚑𝚎 𝚍𝚞 𝚜𝚌𝚘𝚛𝚎 𝚍𝚎 ${user.toString()}`,
+                fields: [{
+                        name: "𝙿𝚘𝚒𝚗𝚝𝚜:          ",
+                        value: "**" + score.points + " points **",
+                    },
+                    {
+                        name: "**Niveau:          **",
+                        value: "**" + score.level + "**",
+                    },
+                    {
+                        name: "**Prochain niveau: **",
+                        value: "**" + nextXPscore + " points **",
+                    },
+                ],
+                image: {
+                    url: user.displayAvatarURL({ dynamic: true, size: 2048 }),
+                }
+            }, ]
         })
-        .then((msg) => {
-            setTimeout(() => msg.delete(), 10000);
-        });
 }
 
 function top_rank(messageChannel, message, client, errorEmote, messageGuild) {
@@ -304,4 +323,11 @@ function top_rank(messageChannel, message, client, errorEmote, messageGuild) {
     }
 }
 
-module.exports = { score_add, score_give, show_level, show_level_member, top_rank, remove_points };
+module.exports = {
+    score_add,
+    score_give,
+    show_level,
+    show_level_member,
+    top_rank,
+    remove_points,
+};

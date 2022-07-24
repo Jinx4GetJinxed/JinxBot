@@ -79,7 +79,7 @@ async function creationMessage(client, message) {
 
                 case "level":
                     if (message.channel.id === "833824151671930920") {
-                        if (args != null) {
+                        if (args[0] != undefined) {
                             show_level_member(client, message, args)
                         } else {
                             show_level(client, message);
