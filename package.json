@@ -22,7 +22,7 @@
         "@distube/yt-dlp": "^1.0.2",
         "ansi-regex": ">=5.0.1",
         "better-sqlite3": "^7.5.3",
-        "discord-api-types": "^0.33.0",
+        "discord-api-types": "^0.33.5",
         "discord.js": "^13.7.0",
         "distube": "^3.3.4",
         "dotenv": "^10.0.0",
